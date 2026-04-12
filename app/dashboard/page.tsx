@@ -264,8 +264,7 @@ color: '#2ECC71', fontWeight: 700 }}>{fmt(lead.arv_estimate)}</td>
 color: '#F4A261', fontWeight: 700 }}>{fmt(lead.assignment_fee)}</td>
 <td style={{ padding: '10px 12px' }}>
 <div style={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
-{lead.tax_delinquent && <span style={{ fontSize: 6, color: '#FF3C6E',
-border: '1px solid #FF3C6E', padding: '1px 4px',
+{lead.tax_delinquent && <span style={{ fontSize: 6, color: '#FF3C6E',border: '1px solid #FF3C6E', padding: '1px 4px',
 borderRadius: 1 }}>TAX</span>}
 {lead.rent_control && <span style={{ fontSize: 6, color: '#FFB800',
 border: '1px solid #FFB800', padding: '1px 4px',
@@ -273,9 +272,14 @@ borderRadius: 1 }}>RSO</span>}
 {lead.active_violation && <span style={{ fontSize: 6, color: '#FF3C6E',
 border: '1px solid #FF3C6E', padding: '1px 4px',
 borderRadius: 1 }}>VIOL</span>}
-{lead.deferred_maint && <span style={{ fontSize: 6, color: '#8080A0',
-border: '1px solid #484860', padding: '1px 4px',
-borderRadius: 1 }}>MAINT</span>}
+{lead.deferred_maint && <span style={{ fontSize: 6, color: '#C77DFF',
+border: '1px solid #C77DFF', padding: '1px 4px',
+borderRadius: 1 }}>NO PERMIT</span>}
+{lead.days_since_permit && lead.days_since_permit > 1825 && (
+<span style={{ fontSize: 6, color: '#FF7820',
+border: '1px solid #FF7820', padding: '1px 4px',
+borderRadius: 1 }}>5YR+</span>
+)}
 </div>
 </td>
 <td style={{ padding: '10px 12px' }}>
@@ -327,7 +331,10 @@ letterSpacing: '0.18em', fontWeight: 700 }}>
 ['TAX DELINQUENT', selected.tax_delinquent ? 'YES ⚠' : 'CLEAR'],
 ['RENT CONTROL', selected.rent_control ? 'RSO ⚠' : 'CLEAR'],
 ['ACTIVE VIOLATION', selected.active_violation ? 'YES ⚠' : 'CLEAR'],
-['DEFERRED MAINT', selected.deferred_maint ? 'YES' : 'NO'],
+['DEFERRED MAINT', selected.deferred_maint ? 'YES — NO PERMIT ON RECORD' : 'NO'],['DAYS SINCE PERMIT', selected.days_since_permit === 9999 ? 'NO RECORD' :
+    selected.days_since_permit ? `${selected.days_since_permit} DAYS` : '—'],
+    ['LADBS STATUS', selected.days_since_permit === 9999 ? '⚠ UNVERIFIED' :
+    selected.days_since_permit > 1825 ? '⚠ DEFERRED' : '✓ ACTIVE'],
 ['STATUS', selected.status],
 ].map(([k, v]) => (
 <div key={k} style={{ display: 'flex', justifyContent: 'space-between',
