@@ -67,6 +67,30 @@ setLoading(false);
 load();
 }, []);
 
+async function updateLeadStatus(id: number, status: string) {const { error } = await supabase
+.from('has_properties')
+.update({ status })
+.eq('id', id);
+if (error) console.error('Status update error:', error);
+return !error;
+}
+
+async function logCompliance(contentId: string, contentType: string, notes: string) {
+const { error } = await supabase
+.from('has_compliance_log')
+.insert({
+content_id: contentId,
+content_type: contentType,
+human_reviewed: true,
+review_date: new Date().toISOString(),
+approved: true,
+reviewer: 'Daniel Ebuehi',
+notes,
+});
+if (error) console.error('Compliance log error:', error);
+return !error;
+}
+
 const zips = ['ALL', ...Array.from(new Set(leads.map(l => l.zip))).sort()];
 const statuses = ['ALL', 'NEW', 'CONTACTED', 'RESPONDED', 'NEGOTIATING', 'CLOSED'];
 
@@ -319,20 +343,49 @@ color: (k === 'TAX DELINQUENT' && selected.tax_delinquent) ||
 ))}
 {/* Action buttons */}
 <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 6 }}>
-<button style={{ background: `${scoreColor(selected.dsa_score)}20`,
+<button onClick={async () => {
+const ok = await updateLeadStatus(selected.id, 'CONTACTED');
+if (ok) {
+await logCompliance(
+String(selected.id),
+'outreach_sms',
+`Lead ${selected.address} moved to CONTACTED — DSA score ${selected.dsa_score}`
+);
+setLeads(prev => prev.map(l =>
+l.id === selected.id ? { ...l, status: 'CONTACTED' } : l
+));
+setSelected({ ...selected, status: 'CONTACTED' });
+}
+}}
+style={{ background: `${scoreColor(selected.dsa_score)}20`,
 border: `1px solid ${scoreColor(selected.dsa_score)}`,
 color: scoreColor(selected.dsa_score), padding: '8px',
 borderRadius: 3, fontSize: 8, letterSpacing: '0.14em',
 textTransform: 'uppercase', cursor: 'pointer',
 fontFamily: 'inherit', fontWeight: 700 }}>
-→ ADD TO PIPELINE B
+→ MARK CONTACTED
 </button>
-<button style={{ background: 'transparent',
+<button
+onClick={async () => {
+const ok = await updateLeadStatus(selected.id, 'NEGOTIATING');
+if (ok) {
+await logCompliance(
+String(selected.id),
+'pipeline_b',
+`Lead ${selected.address} added to Pipeline B — DSA score ${selected.dsa_score}`
+);
+setLeads(prev => prev.map(l =>
+l.id === selected.id ? { ...l, status: 'NEGOTIATING' } : l
+));
+setSelected({ ...selected, status: 'NEGOTIATING' });
+}
+}}
+style={{ background: 'transparent',
 border: '1px solid #1A1A2E', color: '#484860',
 padding: '8px', borderRadius: 3, fontSize: 8,
 letterSpacing: '0.14em', textTransform: 'uppercase',
 cursor: 'pointer', fontFamily: 'inherit' }}>
-INITIATE OUTREACH
+→ ADD TO PIPELINE B
 </button>
 </div>
 </div>
