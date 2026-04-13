@@ -334,8 +334,8 @@ letterSpacing: '0.18em', fontWeight: 700 }}>
 ['ACTIVE VIOLATION', selected.active_violation ? 'YES ⚠' : 'CLEAR'],
 ['DEFERRED MAINT', selected.deferred_maint ? 'YES — NO PERMIT ON RECORD' : 'NO'],['DAYS SINCE PERMIT', selected.days_since_permit === 9999 ? 'NO RECORD' :
     selected.days_since_permit ? `${selected.days_since_permit} DAYS` : '—'],
-    ['LADBS STATUS', selected.days_since_permit === 9999 ? '⚠ UNVERIFIED' :
-    selected.days_since_permit > 1825 ? '⚠ DEFERRED' : '✓ ACTIVE'],
+['LADBS STATUS', selected.days_since_permit === 9999 ? '⚠ UNVERIFIED' :
+    (selected.days_since_permit ?? 0) > 1825 ? '⚠ DEFERRED' : '✓ ACTIVE'],
 ['STATUS', selected.status],
 ].map(([k, v]) => (
 <div key={k} style={{ display: 'flex', justifyContent: 'space-between',
