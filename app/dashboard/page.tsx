@@ -6,25 +6,24 @@ process.env.NEXT_PUBLIC_SUPABASE_URL!,
 process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-type Lead = {
-id: number;
-address: string;
-zip: string;
-units: number;
-zoning: string;
-dsa_score: number;
-status: string;
-tax_delinquent: boolean;
-rent_control: boolean;
-ula_tax_risk: boolean;
-active_violation: boolean;
-deferred_maint: boolean;
-arv_estimate: number;
-assignment_fee: number;
-years_owned: number;
-days_since_permit: number | null;
-exit_cap_rate: number | null;
-};
+type Lead = {id: number;
+    address: string;
+    zip: string;
+    units: number;
+    zoning: string;
+    dsa_score: number;
+    status: string;
+    tax_delinquent: boolean;
+    rent_control: boolean;
+    ula_tax_risk: boolean;
+    active_violation: boolean;
+    deferred_maint: boolean;
+    arv_estimate: number;
+    assignment_fee: number;
+    years_owned: number;
+    days_since_permit: number | null;
+    exit_cap_rate: number | null;
+    };
 
 function scoreColor(s: number) {
 if (s >= 85) return '#FF3C6E';
