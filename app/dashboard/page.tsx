@@ -276,7 +276,7 @@ borderRadius: 1 }}>VIOL</span>}
 {lead.deferred_maint && <span style={{ fontSize: 6, color: '#C77DFF',
 border: '1px solid #C77DFF', padding: '1px 4px',
 borderRadius: 1 }}>NO PERMIT</span>}
-{lead.days_since_permit && lead.days_since_permit > 1825 && (
+{(lead.days_since_permit ?? 0) > 1825 && (
 <span style={{ fontSize: 6, color: '#FF7820',
 border: '1px solid #FF7820', padding: '1px 4px',
 borderRadius: 1 }}>5YR+</span>
@@ -332,9 +332,9 @@ letterSpacing: '0.18em', fontWeight: 700 }}>
 ['TAX DELINQUENT', selected.tax_delinquent ? 'YES ⚠' : 'CLEAR'],
 ['RENT CONTROL', selected.rent_control ? 'RSO ⚠' : 'CLEAR'],
 ['ACTIVE VIOLATION', selected.active_violation ? 'YES ⚠' : 'CLEAR'],
-['DEFERRED MAINT', selected.deferred_maint ? 'YES — NO PERMIT ON RECORD' : 'NO'],['DAYS SINCE PERMIT', selected.days_since_permit === 9999 ? 'NO RECORD' :
+['DEFERRED MAINT', selected.deferred_maint ? 'YES — NO PERMIT ON RECORD' : 'NO'],['DAYS SINCE PERMIT', (selected.days_since_permit ?? 0) === 9999 ? 'NO RECORD' :
     selected.days_since_permit ? `${selected.days_since_permit} DAYS` : '—'],
-['LADBS STATUS', selected.days_since_permit === 9999 ? '⚠ UNVERIFIED' :
+    ['LADBS STATUS', (selected.days_since_permit ?? 0) === 9999 ? '⚠ UNVERIFIED' :
     (selected.days_since_permit ?? 0) > 1825 ? '⚠ DEFERRED' : '✓ ACTIVE'],
 ['STATUS', selected.status],
 ].map(([k, v]) => (
