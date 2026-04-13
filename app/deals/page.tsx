@@ -394,7 +394,7 @@ selectedLead.ula_tax_risk
 : null,
 ['NET ASSIGNMENT FEE', fmt(calc.netFee),
 calc.netFee > 0 ? '#2ECC71' : '#FF3C6E'],
-].filter(Boolean).map(([k, v, c]) => (
+].filter((item): item is [string, string, string] => item !== null).map(([k, v, c]) => (
 <div key={k as string} style={{
 display: 'flex', justifyContent: 'space-between',
 padding: '4px 0', borderBottom: '1px solid #1A1A2E' }}>
