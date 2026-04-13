@@ -266,7 +266,7 @@ marginBottom: 12 }}>{lead?.zip} · {lead?.units} units</div>
 ['REPAIRS', fmt(deal.repair_estimate), '#FFB800'],
 ['ASSIGNMENT FEE', fmt(deal.assignment_fee), '#2ECC71'],
 deal.ula_tax_risk ? ['ULA TAX IMPACT', fmt(deal.ula_impact), '#FF3C6E'] : null,
-].filter(Boolean).map(([k, v, c]) => (
+].filter((item): item is [string, string, string] => item !== null).map(([k, v, c]) => (
 <div key={k as string} style={{
 display: 'flex', justifyContent: 'space-between',
 padding: '4px 0', borderBottom: '1px solid #1A1A2E' }}>
