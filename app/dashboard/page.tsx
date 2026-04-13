@@ -22,6 +22,8 @@ deferred_maint: boolean;
 arv_estimate: number;
 assignment_fee: number;
 years_owned: number;
+days_since_permit: number | null;
+exit_cap_rate: number | null;
 };
 
 function scoreColor(s: number) {
