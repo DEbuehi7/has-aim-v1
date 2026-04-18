@@ -78,7 +78,7 @@ console.log(`Compliance gate: ACTIVE · Fair Housing: ENFORCED\n`);
 // Fetch all leads scoring 75+
 const { data: leads, error } = await supabase
 .from('has_properties')
-.select('id, address, zip, dsa_score, status')
+.select('id, address, zip, dsa_score, status, phone')
 .gte('dsa_score', 75)
 .order('dsa_score', { ascending: false });
 
@@ -93,9 +93,9 @@ let failed = 0;
 for (const lead of leads) {
 console.log(`[${lead.id}] ${lead.address} · Score: ${lead.dsa_score} · Status: ${lead.status}`);
 
-// Skip already contacted leads
-if (!testMode && lead.status === 'CONTACTED') {
-console.log(` → SKIPPED (already contacted)\n`);
+// Skip already contacted leads — only skip NEGOTIATING or higher
+if (!testMode && ['NEGOTIATING', 'UNDER_CONTRACT', 'CLOSED'].includes(lead.status)) {
+console.log(` → SKIPPED (already in pipeline)\n`);
 skipped++;
 continue;
 }
@@ -112,7 +112,7 @@ continue;
 }
 
 // In test mode send to your number, live mode would use lead's phone
-const sendTo = testMode ? TEST_NUMBER : null;
+const sendTo = testMode ? TEST_NUMBER : lead.phone;
 
 if (!sendTo) {
 console.log(` → No phone number on file · compliance log created\n`);
@@ -146,4 +146,4 @@ console.log(`──────────────────────�
 }
 
 // Run in test mode — sends to YOUR number only
-runOutreach(true);
+runOutreach(false);
