@@ -14,6 +14,7 @@ const from = (params.get('From') || '').trim();
 const body = params.get('Body') || '';
 
 console.log(`SMS received from ${from}: ${body}`);
+console.log(`FROM LENGTH: ${from.length} CHARS: ${JSON.stringify(from)}`);
 
 // Notify all inbound
 await fetch('https://ntfy.sh/has-sentinel-daniel', {
