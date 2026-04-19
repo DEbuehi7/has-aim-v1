@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
 try {
 const text = await req.text();
 const params = new URLSearchParams(text);
-const from = params.get('From') || '';
+const from = (params.get('From') || '').trim();
 const body = params.get('Body') || '';
 
 console.log(`SMS received from ${from}: ${body}`);
