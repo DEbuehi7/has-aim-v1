@@ -2,12 +2,6 @@
 export const dynamic = 'force-dynamic';
 import { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
-export default function Dashboard() {
-    const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
-
 type Deal = {
 id: number;
 property_id: number;
@@ -38,7 +32,7 @@ status: string;
 };
 
 function fmt(n: number) {
-if (!n) return '—';
+if (!n) return '-';
 if (n >= 1e6) return `$${(n / 1e6).toFixed(2)}M`;
 if (n >= 1e3) return `$${(n / 1e3).toFixed(0)}K`;
 return `$${n}`;
@@ -88,7 +82,7 @@ setLoading(false);
 load();
 }, []);
 
-// ── Assignment fee calculator ──────────────────────────────
+// -- Assignment fee calculator ------------------------------
 function calculateFee(lead: Lead, sellerAskVal: number, repairVal: number) {
 const arv = lead.arv_estimate || 0;
 const capRate = lead.exit_cap_rate || 0.058;
@@ -142,7 +136,7 @@ setNoiEstimate('');
 setSaving(false);
 }
 
-// ── Funnel stats ───────────────────────────────────────────
+// -- Funnel stats -------------------------------------------
 const funnel = {
 scored: leads.length,
 contacted: leads.filter(l => l.status === 'CONTACTED').length,
@@ -158,7 +152,7 @@ if (loading) return (
 alignItems: 'center', justifyContent: 'center',
 fontFamily: 'monospace', color: '#2ECC71', fontSize: 14,
 letterSpacing: '0.2em' }}>
-LOADING PIPELINE B…
+LOADING PIPELINE B...
 </div>
 );
 
@@ -409,7 +403,7 @@ color: c as string }}>{v}</span>
 {calc.netFee <= 0 && (
 <div style={{ marginTop: 8, fontSize: 8,
 color: '#FF3C6E', letterSpacing: '0.1em' }}>
-⚠ NEGATIVE FEE — Renegotiate seller ask
+⚠ NEGATIVE FEE - Renegotiate seller ask
 </div>
 )}
 </div>
@@ -427,7 +421,7 @@ padding: '10px', borderRadius: 3, fontSize: 9,
 letterSpacing: '0.14em', textTransform: 'uppercase',
 cursor: !selectedLead || !sellerAsk ? 'not-allowed' : 'pointer',
 fontFamily: 'inherit', fontWeight: 700 }}>
-{saving ? 'SAVING…' : '→ CREATE DEAL'}
+{saving ? 'SAVING...' : '→ CREATE DEAL'}
 </button>
 </div>
 )}
