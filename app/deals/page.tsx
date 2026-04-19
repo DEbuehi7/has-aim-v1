@@ -1,6 +1,6 @@
 'use client';import { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
-
+export const dynamic = 'force-dynamic';
 export default function Dashboard() {
     const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
