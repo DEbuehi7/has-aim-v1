@@ -37,7 +37,9 @@ const [loading, setLoading] = useState(true);
 const [filterZip, setFilterZip] = useState('ALL');
 const [filterStatus, setFilterStatus] = useState('ALL');
 const [sortBy, setSortBy] = useState<'dsa_score'|'arv_estimate'|'assignment_fee'>('dsa_score');
-const [selecconst [selecconst [selecconst [selecconst [selecconst [selecco> {
+ const [selected, setSelected] = useState(null);
+
+ useEffect(() => {
 supabase.from('has_properties').select('*').order('dsa_score', { ascending: false })
 .then(({ data }) => { setLeads(data || []); setLoading(false); });
 }, []);
