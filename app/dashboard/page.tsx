@@ -88,7 +88,7 @@ REAL ESTATE REALITY OS · SBI CAPITAL · aim2030app.com
 </div>
 <div style={{display:'flex',gap:20}}>
 {([['LEADS',stats.total,'#00E5FF'],['CRITICAL',stats.critical,'#FF3C6E'],
-HIGH',stats.high,'#FF7820'],['DELINQ',stats.delinq,'#FF3C6E'],
+ ['HIGH',stats.high,'#FF7820'],['DELINQ',stats.delinq,'#FF3C6E'],
 ['RENT CTRL',stats.rentControl,'#FFB800'],['TOTAL FEES',fmt(stats.totalFees),'#2ECC71']] as [string,string|number,string][]).map(([l,v,c]) => (
 <div key={l} style={{textAlign:'center'}}>
 <div style={{fontSize:7,color:'#484860',letterSpacing:'0.15em'}}>{l}</div>
