@@ -14,6 +14,17 @@ const to = formData.get('To') as string;
 
 console.log(`SMS received from ${from}: ${body}`);
 
+// Notify for all inbound SMS
+await fetch('https://ntfy.sh/has-sentinel-daniel', {
+    method: 'POST',
+    body: `📱 Inbound SMS from ${from}: "${body}"`,
+    headers: {
+    'Title': 'HAS Sentinel — Inbound SMS',
+    'Priority': 'default',
+    'Tags': 'speech_balloon',
+    },
+    });
+
 // Find matching lead by phone number
 const { data: lead } = await supabase
 .from('has_properties')
@@ -44,6 +55,17 @@ await supabase
 
 console.log(`Lead ${lead.address} auto-updated to RESPONDED`);
 }
+
+// Push notification to your phone via ntfy.sh
+await fetch('https://ntfy.sh/has-sentinel-daniel', {
+    method: 'POST',
+    body: `🔥 SELLER RESPONDED: ${lead.address} (DSA ${lead.dsa_score}) — "${body}" — Call (323) 689-4495`,
+    headers: {
+    'Title': 'HAS Sentinel — Seller Response',
+    'Priority': 'urgent',
+    'Tags': 'rotating_light',
+    },
+    });
 
 // Return TwiML response
 const twiml = interested
