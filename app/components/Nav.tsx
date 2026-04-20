@@ -8,6 +8,7 @@ const LINKS = [
 { href: '/alerts', label: 'ALERTS', color: '#FF3C6E' },
 { href: '/grants', label: 'GRANTS', color: '#FFD700' },
 { href: '/field', label: 'FIELD OPS', color: '#F4A261' },
+{ href: '/vendors', label: 'VENDORS', color: '#C77DFF' },
 ];
 
 export default function Nav() {
