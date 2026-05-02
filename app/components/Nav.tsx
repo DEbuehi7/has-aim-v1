@@ -10,6 +10,7 @@ const LINKS = [
 { href: '/field', label: 'FIELD OPS', color: '#F4A261' },
 { href: '/vendors', label: 'VENDORS', color: '#C77DFF' },
 { href: '/settings', label: 'SETTINGS', color: '#8080A0' },
+{ href: '/pure', label: 'PURE', color: '#C77DFF' },
 ];
 
 export default function Nav() {
