@@ -56,8 +56,16 @@ When given a property address:
     await mcpClient.close();
 
     // Parse the response
-    const text = result.text.replace(/```json|```/g, '').trim();
-    const contactData = JSON.parse(text);
+    let contactData = { ownerName: 'Unknown', phone: '', email: '', tcpaCompliant: true, dncCompliant: true };
+try {
+  const jsonMatch = result.text.match(/\{[\s\S]*\}/);
+  if (jsonMatch) {
+    contactData = JSON.parse(jsonMatch[0]);
+  }
+} catch (e) {
+  console.error('Parse error:', result.text);
+}
+
 
     // Update has_properties with real owner data
     if (propertyId && contactData.phone) {
