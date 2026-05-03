@@ -20,6 +20,8 @@ process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 const [alerts, setAlerts] = useState<Alert[]>([]);
 const [loading, setLoading] = useState(true);
 const [filter, setFilter] = useState('ALL');
+const [expanded, setExpanded] = useState<number | null>(null);
+
 
 useEffect(() => {
 async function load() {
