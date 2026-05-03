@@ -143,21 +143,6 @@ INBOUND
 </span>
 )}
 </div>
-<span style={{ fontSize: 8, color: '#484860' }}>{formatTime(alert.review_date)}</span>
-</div>
-<div style={{ fontSize: 10, color: '#C0C0D8', lineHeight: 1.6 }}>{alert.notes}</div>
-<div style={{ display: 'flex', gap: 12, marginTop: 6 }}>
-<span style={{ fontSize: 7, color: alert.human_reviewed ? '#2ECC71' : '#484860' }}>
-{alert.human_reviewed ? '✓ REVIEWED' : '○ PENDING'}
-</span>
-<span style={{ fontSize: 7, color: alert.approved ? '#2ECC71' : '#484860' }}>
-{alert.approved ? '✓ APPROVED' : '○ UNAPPROVED'}
-</span>
-</div>
-</div>
-))
-)}
-</div>
 
 <style>{`
 @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.3;transform:scale(0.5)} }
