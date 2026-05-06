@@ -22,7 +22,8 @@ export default function PureChat() {
       const data = await res.json();
       setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
     } catch {
-      setMessages(prev => [...prev, { role: 'assistant', content: 'Error — try again.' }]);
+      const errMsg = err instanceof Error ? err.message : 'Unknown error';
+setMessages(prev => [...prev, { role: 'assistant', content: 'Error: ' + errMsg }]);
     }
     setLoading(false);
   }
