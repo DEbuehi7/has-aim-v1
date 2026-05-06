@@ -43,7 +43,12 @@ Be concise. Answer in 2-3 sentences max. Reference live data when available.`;
     });
 
     const data = await response.json();
-    const reply = data.content?.[0]?.text || 'No response';
+    console.log('Anthropic response:', JSON.stringify(data));
+const reply = data.content?.[0]?.text 
+  || data?.completion 
+  || data?.error?.message
+  || JSON.stringify(data).slice(0,200);
+
 
     await supabase.from('aim_activity_log').insert({
       platform: 'Pure',
