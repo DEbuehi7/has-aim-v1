@@ -1,5 +1,4 @@
 import Anthropic from '@anthropic-ai/sdk';
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! });
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
