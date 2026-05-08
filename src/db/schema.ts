@@ -271,3 +271,48 @@ import {pgTable, serial, text, integer, boolean,
     processed: boolean("processed").default(false),
     created_at: timestamp("created_at").defaultNow(),
     });
+
+// ── ADD TO packages/db/schema.ts ──────────────────────────────
+// Drop this after your existing table definitions
+
+export const contactStatusEnum = pgEnum(‘contact_status’, [
+‘NEW’, ‘CALLED’, ‘VOICEMAIL’, ‘CALLBACK’, ‘INTERESTED’, ‘NOT_INTERESTED’, ‘DNC’
+]);
+
+export const contactSourceEnum = pgEnum(‘contact_source’, [
+‘BATCHDATA’, ‘MANUAL’, ‘PROPSTREAM’, ‘REFERRAL’
+]);
+
+export const has_contacts = pgTable(‘has_contacts’, {
+id:              serial(‘id’).primaryKey(),
+property_id:     integer(‘property_id’).references(() => properties.id, { onDelete: ‘set null’ }),
+
+// Identity
+full_name:       text(‘full_name’).notNull(),
+role:            text(‘role’).default(‘OWNER’),        // OWNER | SPOUSE | MANAGER | ATTORNEY
+email:           text(‘email’),
+phone_primary:   text(‘phone_primary’),
+phone_secondary: text(‘phone_secondary’),
+mailing_address: text(‘mailing_address’),
+
+// BatchData enrichment
+batchdata_id:    text(‘batchdata_id’).unique(),        // BD response ID for dedup
+skip_traced:     boolean(‘skip_traced’).default(false),
+dnc:             boolean(‘dnc’).default(false),        // Do Not Call flag
+tcpa_compliant:  boolean(‘tcpa_compliant’).default(true),
+phone_verified:  boolean(‘phone_verified’).default(false),
+
+// Outreach tracking
+status:          contactStatusEnum(‘status’).default(‘NEW’),
+source:          contactSourceEnum(‘source’).default(‘BATCHDATA’),
+call_attempts:   integer(‘call_attempts’).default(0),
+last_called_at:  timestamp(‘last_called_at’),
+next_call_at:    timestamp(‘next_call_at’),
+twilio_sid:      text(‘twilio_sid’),                   // last Twilio call SID
+
+// Notes
+notes:           text(‘notes’),
+
+created_at:      timestamp(‘created_at’).defaultNow(),
+updated_at:      timestamp(‘updated_at’).defaultNow(),
+});
