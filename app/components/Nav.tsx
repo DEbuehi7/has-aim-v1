@@ -12,6 +12,7 @@ const LINKS = [
 { href: '/settings', label: 'SETTINGS', color: '#8080A0' },
 { href: '/pure', label: 'PURE', color: '#C77DFF' },
 { href: '/callscript', label: 'CALL', color: '#2ECC71' },
+{ href: '/contacts', label: 'CONTACTS', color: '#00E5FF' },
 ];
 
 export default function Nav() {
