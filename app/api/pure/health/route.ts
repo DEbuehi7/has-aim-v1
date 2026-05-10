@@ -1,8 +1,8 @@
-export const dynamic = “force-dynamic”;
+export const dynamic = "force-dynamic";
 
-import { NextResponse } from “next/server”;
+import { NextResponse } from "next/server";
 
-import { createClient } from “@supabase/supabase-js”;
+import { createClient } from "@supabase/supabase-js";
 
 
 
@@ -24,9 +24,9 @@ const scores = [];
 
 // SENTINEL health
 
-const { data: contacts } = await supabase.from(“has_contacts”).select(“id, skip_traced, status”);
+const { data: contacts } = await supabase.from("has_contacts").select("id, skip_traced, status");
 
-const { data: deals } = await supabase.from(“has_deals”).select(“id, stage”);
+const { data: deals } = await supabase.from("has_deals").select("id, stage");
 
 const contactCount = contacts?.length ?? 0;
 
@@ -44,11 +44,11 @@ const sentinelScore = Math.min(100, Math.round(
 
 scores.push({
 
-app: “SENTINEL / HAS”,
+app: "SENTINEL / HAS",
 
 score: sentinelScore,
 
-notes: contactCount + “ contacts, “ + tracedCount + “ traced, “ + (deals?.length ?? 0) + “ deals”,
+notes: contactCount + " contacts, " + tracedCount + " traced, " + (deals?.length ?? 0) + " deals",
 
 });
 
@@ -56,17 +56,17 @@ notes: contactCount + “ contacts, “ + tracedCount + “ traced, “ + (deals
 
 // AURA8 health
 
-const { data: nodes } = await supabase.from(“aura8_nodes”).select(“id”).limit(1);
+const { data: nodes } = await supabase.from("aura8_nodes").select("id").limit(1);
 
 const aura8Score = (nodes?.length ?? 0) > 0 ? 60 : 20;
 
 scores.push({
 
-app: “AURA8”,
+app: "AURA8",
 
 score: aura8Score,
 
-notes: (nodes?.length ?? 0) > 0 ? “Nodes seeded” : “No nodes yet — Sprint 6 target”,
+notes: (nodes?.length ?? 0) > 0 ? "Nodes seeded" : "No nodes yet -- Sprint 6 target",
 
 });
 
@@ -74,31 +74,31 @@ notes: (nodes?.length ?? 0) > 0 ? “Nodes seeded” : “No nodes yet — Sprin
 
 // AIMEDIA health
 
-const { data: planets } = await supabase.from(“aimedia_planets”).select(“id”).limit(1);
+const { data: planets } = await supabase.from("aimedia_planets").select("id").limit(1);
 
 const aimediaScore = (planets?.length ?? 0) > 0 ? 55 : 15;
 
 scores.push({
 
-app: “AIMEDIA PULSE”,
+app: "AIMEDIA PULSE",
 
 score: aimediaScore,
 
-notes: (planets?.length ?? 0) > 0 ? “Planets seeded” : “No planets yet — Sprint 6 target”,
+notes: (planets?.length ?? 0) > 0 ? "Planets seeded" : "No planets yet -- Sprint 6 target",
 
 });
 
 
 
-// AIM OS health — always computed
+// AIM OS health -- always computed
 
 scores.push({
 
-app: “AIM ANOMALY OS”,
+app: "AIM ANOMALY OS",
 
 score: 70,
 
-notes: “Sprint 1 at 70% — unified shell in progress”,
+notes: "Sprint 1 at 70% -- unified shell in progress",
 
 });
 
@@ -108,11 +108,11 @@ notes: “Sprint 1 at 70% — unified shell in progress”,
 
 scores.push({
 
-app: “PURE (Master OS)”,
+app: "PURE (Master OS)",
 
 score: 65,
 
-notes: “Life OS live. Health scores wired. AIMoney shell active.”,
+notes: "Life OS live. Health scores wired. AIMoney shell active.",
 
 });
 
@@ -134,7 +134,7 @@ return NextResponse.json(scores);
 
 } catch (e) {
 
-return NextResponse.json({ error: “Health check failed”, detail: String(e) }, { status: 500 });
+return NextResponse.json({ error: "Health check failed", detail: String(e) }, { status: 500 });
 
 }
 

@@ -1,8 +1,8 @@
-export const dynamic = “force-dynamic”;
+export const dynamic = "force-dynamic";
 
-import { NextResponse } from “next/server”;
+import { NextResponse } from "next/server";
 
-import { createClient } from “@supabase/supabase-js”;
+import { createClient } from "@supabase/supabase-js";
 
 
 
@@ -16,7 +16,7 @@ process.env.SUPABASE_SERVICE_ROLE_KEY
 
 
 
-const BATCHDATA_URL = “https://api.batchdata.com/api/v1”;
+const BATCHDATA_URL = "https://api.batchdata.com/api/v1";
 
 const BATCHDATA_KEY = process.env.BATCHDATA_API_KEY;
 
@@ -138,7 +138,7 @@ return NextResponse.json({ success: true, contact: data, raw: result });
 
 } catch (e) {
 
-return NextResponse.json({ error: “Skip trace failed”, detail: String(e) }, { status: 500 });
+return NextResponse.json({ error: "Skip trace failed", detail: String(e) }, { status: 500 });
 
 }
 

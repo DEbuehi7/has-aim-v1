@@ -1,30 +1,30 @@
-“use client”;
+"use client";
 
-export const dynamic = “force-dynamic”;
+export const dynamic = "force-dynamic";
 
 
 
-import { useEffect, useState } from “react”;
+import { useEffect, useState } from "react";
 
-import Link from “next/link”;
+import Link from "next/link";
 
 
 
 const STATUS_COLORS = {
 
-NEW: “bg-zinc-700 text-zinc-200”,
+NEW: "bg-zinc-700 text-zinc-200",
 
-CALLED: “bg-blue-900 text-blue-200”,
+CALLED: "bg-blue-900 text-blue-200",
 
-VOICEMAIL: “bg-yellow-900 text-yellow-200”,
+VOICEMAIL: "bg-yellow-900 text-yellow-200",
 
-CALLBACK: “bg-purple-900 text-purple-200”,
+CALLBACK: "bg-purple-900 text-purple-200",
 
-INTERESTED: “bg-green-900 text-green-200”,
+INTERESTED: "bg-green-900 text-green-200",
 
-NOT_INTERESTED: “bg-red-900 text-red-200”,
+NOT_INTERESTED: "bg-red-900 text-red-200",
 
-DNC: “bg-red-950 text-red-400”,
+DNC: "bg-red-950 text-red-400",
 
 };
 
@@ -36,15 +36,15 @@ const [contacts, setContacts] = useState([]);
 
 const [loading, setLoading] = useState(true);
 
-const [search, setSearch] = useState(””);
+const [search, setSearch] = useState("");
 
-const [filter, setFilter] = useState(“ALL”);
+const [filter, setFilter] = useState("ALL");
 
 
 
 useEffect(() => {
 
-fetch(”/api/contacts”)
+fetch("/api/contacts")
 
 .then(r => r.json())
 
@@ -62,9 +62,9 @@ const matchSearch =
 
 c.full_name.toLowerCase().includes(search.toLowerCase()) ||
 
-(c.phone_primary ?? “”).includes(search);
+(c.phone_primary ?? "").includes(search);
 
-const matchFilter = filter === “ALL” || c.status === filter;
+const matchFilter = filter === "ALL" || c.status === filter;
 
 return matchSearch && matchFilter;
 

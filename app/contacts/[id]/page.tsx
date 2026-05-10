@@ -1,14 +1,14 @@
-“use client”;
+"use client";
 
 
 
-import { useEffect, useState } from “react”;
+import { useEffect, useState } from "react";
 
-import { useParams, useRouter } from “next/navigation”;
+import { useParams, useRouter } from "next/navigation";
 
 
 
-const STATUSES = [“NEW”,“CALLED”,“VOICEMAIL”,“CALLBACK”,“INTERESTED”,“NOT_INTERESTED”,“DNC”];
+const STATUSES = ["NEW","CALLED","VOICEMAIL","CALLBACK","INTERESTED","NOT_INTERESTED","DNC"];
 
 
 
@@ -16,23 +16,23 @@ const SCRIPT = {
 
 intro: (name) =>
 
-“Hi, may I speak with “ + name + “? My name is Daniel with AIM Capital. I am reaching out because we work with property owners in your area and I wanted to have a quick conversation about your property.”,
+"Hi, may I speak with " + name + "? My name is Daniel with AIM Capital. I am reaching out because we work with property owners in your area and I wanted to have a quick conversation about your property.",
 
 pitch:
 
-“We have been helping owners in similar situations explore their options, whether that is selling, refinancing, or just understanding what the property is worth today. Would you be open to a 5-minute conversation?”,
+"We have been helping owners in similar situations explore their options, whether that is selling, refinancing, or just understanding what the property is worth today. Would you be open to a 5-minute conversation?",
 
 voicemail: (name) =>
 
-“Hi “ + name + “, this is Daniel with AIM Capital. I am reaching out about your property and wanted to connect. Please call me back at your convenience at 323-689-4495. Thank you.”,
+"Hi " + name + ", this is Daniel with AIM Capital. I am reaching out about your property and wanted to connect. Please call me back at your convenience at 323-689-4495. Thank you.",
 
 objection_not_selling:
 
-“Totally understand. I am not here to pressure you at all. We work with a lot of owners who are not actively looking to sell but find it valuable to just know what their options are. Would it be okay if I followed up in a few months?”,
+"Totally understand. I am not here to pressure you at all. We work with a lot of owners who are not actively looking to sell but find it valuable to just know what their options are. Would it be okay if I followed up in a few months?",
 
 objection_not_interested:
 
-“No problem at all. I appreciate your time. Have a great day.”,
+"No problem at all. I appreciate your time. Have a great day.",
 
 };
 
@@ -48,9 +48,9 @@ const [contact, setContact] = useState(null);
 
 const [loading, setLoading] = useState(true);
 
-const [notes, setNotes] = useState(””);
+const [notes, setNotes] = useState("");
 
-const [status, setStatus] = useState(“NEW”);
+const [status, setStatus] = useState("NEW");
 
 const [saving, setSaving] = useState(false);
 
@@ -60,7 +60,7 @@ const [saved, setSaved] = useState(false);
 
 useEffect(() => {
 
-fetch(”/api/contacts”)
+fetch("/api/contacts")
 
 .then(r => r.json())
 
@@ -72,9 +72,9 @@ if (c) {
 
 setContact(c);
 
-setNotes(c.notes ?? “”);
+setNotes(c.notes ?? "");
 
-setStatus(c.status ?? “NEW”);
+setStatus(c.status ?? "NEW");
 
 }
 
@@ -94,11 +94,11 @@ if (!contact) return;
 
 setSaving(true);
 
-await fetch(”/api/contacts”, {
+await fetch("/api/contacts", {
 
-method: “PATCH”,
+method: "PATCH",
 
-headers: { “Content-Type”: “application/json” },
+headers: { "Content-Type": "application/json" },
 
 body: JSON.stringify({
 
@@ -124,7 +124,7 @@ setTimeout(() => {
 
 setSaved(false);
 
-router.push(”/contacts”);
+router.push("/contacts");
 
 }, 1200);
 
@@ -156,7 +156,7 @@ Contact not found.
 
 
 
-const firstName = contact.full_name.split(” “)[0];
+const firstName = contact.full_name.split(" ")[0];
 
 
 

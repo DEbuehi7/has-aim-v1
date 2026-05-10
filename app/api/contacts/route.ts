@@ -1,8 +1,8 @@
-export const dynamic = “force-dynamic”;
+export const dynamic = "force-dynamic";
 
-import { NextResponse } from “next/server”;
+import { NextResponse } from "next/server";
 
-import { createClient } from “@supabase/supabase-js”;
+import { createClient } from "@supabase/supabase-js";
 
 
 
@@ -22,11 +22,11 @@ try {
 
 const { data, error } = await supabase
 
-.from(“has_contacts”)
+.from("has_contacts")
 
-.select(”*”)
+.select("*")
 
-.order(“created_at”, { ascending: false });
+.order("created_at", { ascending: false });
 
 if (error) throw error;
 
@@ -34,7 +34,7 @@ return NextResponse.json(data);
 
 } catch (e) {
 
-return NextResponse.json({ error: “Failed to fetch contacts” }, { status: 500 });
+return NextResponse.json({ error: "Failed to fetch contacts" }, { status: 500 });
 
 }
 
@@ -50,7 +50,7 @@ const body = await req.json();
 
 const { data, error } = await supabase
 
-.from(“has_contacts”)
+.from("has_contacts")
 
 .insert([body])
 
@@ -64,7 +64,7 @@ return NextResponse.json(data);
 
 } catch (e) {
 
-return NextResponse.json({ error: “Failed to create contact” }, { status: 500 });
+return NextResponse.json({ error: "Failed to create contact" }, { status: 500 });
 
 }
 
@@ -82,11 +82,11 @@ const { id, …updates } = body;
 
 const { data, error } = await supabase
 
-.from(“has_contacts”)
+.from("has_contacts")
 
 .update({ …updates, updated_at: new Date().toISOString() })
 
-.eq(“id”, id)
+.eq("id", id)
 
 .select()
 
@@ -98,7 +98,7 @@ return NextResponse.json(data);
 
 } catch (e) {
 
-return NextResponse.json({ error: “Failed to update contact” }, { status: 500 });
+return NextResponse.json({ error: "Failed to update contact" }, { status: 500 });
 
 }
 

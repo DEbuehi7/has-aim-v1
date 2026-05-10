@@ -1,30 +1,30 @@
-“use client”;
+"use client";
 
-export const dynamic = “force-dynamic”;
-
-
-
-import { useEffect, useState } from “react”;
+export const dynamic = "force-dynamic";
 
 
 
-const STAGES = [“ALL”, “NEW”, “ANALYZING”, “OFFER”, “UNDER_CONTRACT”, “CLOSED”, “DEAD”];
+import { useEffect, useState } from "react";
+
+
+
+const STAGES = ["ALL", "NEW", "ANALYZING", "OFFER", "UNDER_CONTRACT", "CLOSED", "DEAD"];
 
 
 
 const STAGE_COLORS = {
 
-NEW: “bg-zinc-700 text-zinc-200”,
+NEW: "bg-zinc-700 text-zinc-200",
 
-ANALYZING: “bg-blue-900 text-blue-200”,
+ANALYZING: "bg-blue-900 text-blue-200",
 
-OFFER: “bg-yellow-900 text-yellow-200”,
+OFFER: "bg-yellow-900 text-yellow-200",
 
-UNDER_CONTRACT: “bg-purple-900 text-purple-200”,
+UNDER_CONTRACT: "bg-purple-900 text-purple-200",
 
-CLOSED: “bg-green-900 text-green-200”,
+CLOSED: "bg-green-900 text-green-200",
 
-DEAD: “bg-red-950 text-red-400”,
+DEAD: "bg-red-950 text-red-400",
 
 };
 
@@ -36,15 +36,15 @@ const [deals, setDeals] = useState([]);
 
 const [loading, setLoading] = useState(true);
 
-const [stage, setStage] = useState(“ALL”);
+const [stage, setStage] = useState("ALL");
 
-const [search, setSearch] = useState(””);
+const [search, setSearch] = useState("");
 
 
 
 useEffect(() => {
 
-fetch(”/api/deals”)
+fetch("/api/deals")
 
 .then(r => r.json())
 
@@ -58,11 +58,11 @@ fetch(”/api/deals”)
 
 const filtered = deals.filter(d => {
 
-const matchStage = stage === “ALL” || d.stage === stage;
+const matchStage = stage === "ALL" || d.stage === stage;
 
-const matchSearch = (d.address ?? “”).toLowerCase().includes(search.toLowerCase()) ||
+const matchSearch = (d.address ?? "").toLowerCase().includes(search.toLowerCase()) ||
 
-(d.owner_name ?? “”).toLowerCase().includes(search.toLowerCase());
+(d.owner_name ?? "").toLowerCase().includes(search.toLowerCase());
 
 return matchStage && matchSearch;
 

@@ -1,16 +1,16 @@
 // ============================================================
 
-// FILE 9A — app/api/deals/route.ts
+// FILE 9A -- app/api/deals/route.ts
 
 // ============================================================
 
 
 
-export const dynamic = “force-dynamic”;
+export const dynamic = "force-dynamic";
 
-import { NextResponse } from “next/server”;
+import { NextResponse } from "next/server";
 
-import { createClient } from “@supabase/supabase-js”;
+import { createClient } from "@supabase/supabase-js";
 
 
 
@@ -30,11 +30,11 @@ try {
 
 const { data, error } = await supabase
 
-.from(“has_deals”)
+.from("has_deals")
 
-.select(”*”)
+.select("*")
 
-.order(“updated_at”, { ascending: false });
+.order("updated_at", { ascending: false });
 
 if (error) throw error;
 
@@ -42,7 +42,7 @@ return NextResponse.json(data);
 
 } catch (e) {
 
-return NextResponse.json({ error: “Failed to fetch deals” }, { status: 500 });
+return NextResponse.json({ error: "Failed to fetch deals" }, { status: 500 });
 
 }
 
@@ -58,7 +58,7 @@ const body = await req.json();
 
 const { data, error } = await supabase
 
-.from(“has_deals”)
+.from("has_deals")
 
 .insert([body])
 
@@ -72,7 +72,7 @@ return NextResponse.json(data);
 
 } catch (e) {
 
-return NextResponse.json({ error: “Failed to create deal” }, { status: 500 });
+return NextResponse.json({ error: "Failed to create deal" }, { status: 500 });
 
 }
 
@@ -90,11 +90,11 @@ const { id, …updates } = body;
 
 const { data, error } = await supabase
 
-.from(“has_deals”)
+.from("has_deals")
 
 .update({ …updates, updated_at: new Date().toISOString() })
 
-.eq(“id”, id)
+.eq("id", id)
 
 .select()
 
@@ -106,7 +106,7 @@ return NextResponse.json(data);
 
 } catch (e) {
 
-return NextResponse.json({ error: “Failed to update deal” }, { status: 500 });
+return NextResponse.json({ error: "Failed to update deal" }, { status: 500 });
 
 }
 

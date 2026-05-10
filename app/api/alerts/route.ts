@@ -1,8 +1,8 @@
-export const dynamic = “force-dynamic”;
+export const dynamic = "force-dynamic";
 
-import { NextResponse } from “next/server”;
+import { NextResponse } from "next/server";
 
-import { createClient } from “@supabase/supabase-js”;
+import { createClient } from "@supabase/supabase-js";
 
 
 
@@ -22,11 +22,11 @@ try {
 
 const { data, error } = await supabase
 
-.from(“has_compliance_log”)
+.from("has_compliance_log")
 
-.select(”*”)
+.select("*")
 
-.order(“created_at”, { ascending: false })
+.order("created_at", { ascending: false })
 
 .limit(100);
 
@@ -36,7 +36,7 @@ return NextResponse.json(data);
 
 } catch (e) {
 
-return NextResponse.json({ error: “Failed to fetch alerts” }, { status: 500 });
+return NextResponse.json({ error: "Failed to fetch alerts" }, { status: 500 });
 
 }
 
@@ -96,7 +96,7 @@ return NextResponse.json(data);
 
 } catch (e) {
 
-return NextResponse.json({ error: “Failed to update alert” }, { status: 500 });
+return NextResponse.json({ error: "Failed to update alert" }, { status: 500 });
 
 }
 

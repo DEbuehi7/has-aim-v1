@@ -1,28 +1,28 @@
-“use client”;
+"use client";
 
-export const dynamic = “force-dynamic”;
-
-
-
-import { useEffect, useState } from “react”;
+export const dynamic = "force-dynamic";
 
 
 
-const ALERT_TYPES = [“ALL”, “TAX_DELINQUENT”, “CODE_VIOLATION”, “ABSENTEE_OWNER”, “HIGH_SCORE”, “PRICE_DROP”];
+import { useEffect, useState } from "react";
+
+
+
+const ALERT_TYPES = ["ALL", "TAX_DELINQUENT", "CODE_VIOLATION", "ABSENTEE_OWNER", "HIGH_SCORE", "PRICE_DROP"];
 
 
 
 const ALERT_COLORS = {
 
-TAX_DELINQUENT: “bg-red-900 text-red-200”,
+TAX_DELINQUENT: "bg-red-900 text-red-200",
 
-CODE_VIOLATION: “bg-orange-900 text-orange-200”,
+CODE_VIOLATION: "bg-orange-900 text-orange-200",
 
-ABSENTEE_OWNER: “bg-yellow-900 text-yellow-200”,
+ABSENTEE_OWNER: "bg-yellow-900 text-yellow-200",
 
-HIGH_SCORE: “bg-green-900 text-green-200”,
+HIGH_SCORE: "bg-green-900 text-green-200",
 
-PRICE_DROP: “bg-blue-900 text-blue-200”,
+PRICE_DROP: "bg-blue-900 text-blue-200",
 
 };
 
@@ -30,15 +30,15 @@ PRICE_DROP: “bg-blue-900 text-blue-200”,
 
 const ALERT_ICONS = {
 
-TAX_DELINQUENT: “T”,
+TAX_DELINQUENT: "T",
 
-CODE_VIOLATION: “C”,
+CODE_VIOLATION: "C",
 
-ABSENTEE_OWNER: “A”,
+ABSENTEE_OWNER: "A",
 
-HIGH_SCORE: “H”,
+HIGH_SCORE: "H",
 
-PRICE_DROP: “P”,
+PRICE_DROP: "P",
 
 };
 
@@ -52,13 +52,13 @@ const [properties, setProperties] = useState([]);
 
 const [loading, setLoading] = useState(true);
 
-const [filter, setFilter] = useState(“ALL”);
+const [filter, setFilter] = useState("ALL");
 
 
 
 useEffect(() => {
 
-fetch(”/api/alerts”)
+fetch("/api/alerts")
 
 .then(r => r.json())
 
@@ -76,7 +76,7 @@ setLoading(false);
 
 
 
-const filtered = alerts.filter(a => filter === “ALL” || a.alert_type === filter);
+const filtered = alerts.filter(a => filter === "ALL" || a.alert_type === filter);
 
 const unread = alerts.filter(a => !a.read).length;
 
@@ -86,11 +86,11 @@ const markRead = async (id) => {
 
 setAlerts(prev => prev.map(a => a.id === id ? { …a, read: true } : a));
 
-await fetch(”/api/alerts”, {
+await fetch("/api/alerts", {
 
-method: “PATCH”,
+method: "PATCH",
 
-headers: { “Content-Type”: “application/json” },
+headers: { "Content-Type": "application/json" },
 
 body: JSON.stringify({ id, read: true }),
 
@@ -104,11 +104,11 @@ const markAllRead = async () => {
 
 setAlerts(prev => prev.map(a => ({ …a, read: true })));
 
-await fetch(”/api/alerts”, {
+await fetch("/api/alerts", {
 
-method: “PATCH”,
+method: "PATCH",
 
-headers: { “Content-Type”: “application/json” },
+headers: { "Content-Type": "application/json" },
 
 body: JSON.stringify({ markAllRead: true }),
 
