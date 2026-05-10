@@ -52,7 +52,6 @@ const body = await req.json();
 
 
 
-```
 
 if (body.markAllRead) {
 
@@ -90,7 +89,6 @@ if (error) throw error;
 
 return NextResponse.json(data);
 
-```
 
 
 

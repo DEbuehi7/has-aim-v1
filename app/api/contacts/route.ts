@@ -78,13 +78,13 @@ try {
 
 const body = await req.json();
 
-const { id, …updates } = body;
+const { id, ...updates } = body;
 
 const { data, error } = await supabase
 
 .from("has_contacts")
 
-.update({ …updates, updated_at: new Date().toISOString() })
+.update({ ...updates, updated_at: new Date().toISOString() })
 
 .eq("id", id)
 

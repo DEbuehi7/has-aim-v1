@@ -136,7 +136,7 @@ if (loading) return (
 
 <div className="min-h-screen bg-zinc-950 text-zinc-400 flex items-center justify-center">
 
-Loading…
+Loading...
 
 </div>
 
@@ -168,7 +168,6 @@ return (
 
 
 
-```
 
     <div className="flex items-center justify-between">
 
@@ -364,7 +363,6 @@ return (
 
 </div>
 
-```
 
 
 

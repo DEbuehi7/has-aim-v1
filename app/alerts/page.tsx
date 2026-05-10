@@ -84,7 +84,7 @@ const unread = alerts.filter(a => !a.read).length;
 
 const markRead = async (id) => {
 
-setAlerts(prev => prev.map(a => a.id === id ? { …a, read: true } : a));
+setAlerts(prev => prev.map(a => a.id === id ? { ...a, read: true } : a));
 
 await fetch("/api/alerts", {
 
@@ -102,7 +102,7 @@ body: JSON.stringify({ id, read: true }),
 
 const markAllRead = async () => {
 
-setAlerts(prev => prev.map(a => ({ …a, read: true })));
+setAlerts(prev => prev.map(a => ({ ...a, read: true })));
 
 await fetch("/api/alerts", {
 
@@ -126,7 +126,6 @@ return (
 
 
 
-```
 
     <div className="flex items-center justify-between mb-6">
 
@@ -310,7 +309,6 @@ return (
 
 </div>
 
-```
 
 
 

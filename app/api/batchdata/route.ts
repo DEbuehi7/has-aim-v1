@@ -30,7 +30,6 @@ const { contact_id, address } = await req.json();
 
 
 
-```
 
 if (!contact_id || !address) {
 
@@ -132,7 +131,6 @@ if (error) throw error;
 
 return NextResponse.json({ success: true, contact: data, raw: result });
 
-```
 
 
 
