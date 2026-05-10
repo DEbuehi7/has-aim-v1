@@ -1,7 +1,6 @@
 import os
-import glob
+import re
 
-# Fix smart quotes in all affected files
 targets = [
     "app/api/contacts/route.ts",
     "app/api/alerts/route.ts",
@@ -22,13 +21,25 @@ for path in targets:
     with open(path, "r", encoding="utf-8") as f:
         content = f.read()
     original = content
-    # Replace smart quotes with straight quotes
-    content = content.replace("\u201c", '"')  # left double quote
-    content = content.replace("\u201d", '"')  # right double quote
-    content = content.replace("\u2018", "'")  # left single quote
-    content = content.replace("\u2019", "'")  # right single quote
-    content = content.replace("\u2013", "-")  # en dash
-    content = content.replace("\u2014", "--") # em dash
+
+    # Fix smart quotes
+    content = content.replace("\u201c", '"')
+    content = content.replace("\u201d", '"')
+    content = content.replace("\u2018", "'")
+    content = content.replace("\u2019", "'")
+
+    # Fix ellipsis character → spread operator
+    content = content.replace("\u2026", "...")
+
+    # Fix en/em dash
+    content = content.replace("\u2013", "-")
+    content = content.replace("\u2014", "--")
+
+    # Remove markdown code fences (``` lines)
+    lines = content.split("\n")
+    lines = [l for l in lines if not l.strip().startswith("```")]
+    content = "\n".join(lines)
+
     if content != original:
         with open(path, "w", encoding="utf-8") as f:
             f.write(content)
