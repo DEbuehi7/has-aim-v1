@@ -1,287 +1,319 @@
-'use client';
-export const dynamic = 'force-dynamic';
-import { useEffect, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
+“use client”;
 
-type Alert = {
-  id: number;
-  content_id: string;
-  content_type: string;
-  notes: string;
-  review_date: string;
-  approved: boolean;
-  human_reviewed: boolean;
+export const dynamic = “force-dynamic”;
+
+
+
+import { useEffect, useState } from “react”;
+
+
+
+const ALERT_TYPES = [“ALL”, “TAX_DELINQUENT”, “CODE_VIOLATION”, “ABSENTEE_OWNER”, “HIGH_SCORE”, “PRICE_DROP”];
+
+
+
+const ALERT_COLORS = {
+
+TAX_DELINQUENT: “bg-red-900 text-red-200”,
+
+CODE_VIOLATION: “bg-orange-900 text-orange-200”,
+
+ABSENTEE_OWNER: “bg-yellow-900 text-yellow-200”,
+
+HIGH_SCORE: “bg-green-900 text-green-200”,
+
+PRICE_DROP: “bg-blue-900 text-blue-200”,
+
 };
 
+
+
+const ALERT_ICONS = {
+
+TAX_DELINQUENT: “T”,
+
+CODE_VIOLATION: “C”,
+
+ABSENTEE_OWNER: “A”,
+
+HIGH_SCORE: “H”,
+
+PRICE_DROP: “P”,
+
+};
+
+
+
 export default function AlertsPage() {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
-  const [alerts, setAlerts] = useState<Alert[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('ALL');
-  const [expanded, setExpanded] = useState<number | null>(null);
 
-  useEffect(() => {
-    async function load() {
-      const { data } = await supabase
-        .from('has_compliance_log')
-        .select('*')
-        .order('review_date', { ascending: false })
-        .limit(100);
-      setAlerts(data || []);
-      setLoading(false);
-    }
-    load();
-    const interval = setInterval(load, 30000);
-    return () => clearInterval(interval);
-  }, []);
+const [alerts, setAlerts] = useState([]);
 
-  const uniqueTypes = ['ALL', ...Array.from(new Set(alerts.map(a => a.content_type)))];
-  const filtered = alerts.filter(a => filter === 'ALL' || a.content_type === filter);
+const [properties, setProperties] = useState([]);
 
-  const stats = {
-    total: alerts.length,
-    responses: alerts.filter(a => a.content_type === 'sms_response').length,
-    outreach: alerts.filter(a => a.content_type === 'outreach_sms').length,
-    pipeline: alerts.filter(a => a.content_type === 'pipeline_b').length,
-  };
+const [loading, setLoading] = useState(true);
 
-  function typeColor(t: string) {
-    if (t === 'sms_response') return '#FF3C6E';
-    if (t === 'outreach_sms') return '#00E5FF';
-    if (t === 'pipeline_b') return '#2ECC71';
-    if (t === 'skip_trace') return '#C77DFF';
-    if (t === 'field_visit') return '#F4A261';
-    return '#FFB800';
-  }
+const [filter, setFilter] = useState(“ALL”);
 
-  function formatTime(dateStr: string) {
-    const d = new Date(dateStr);
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) +
-      ' · ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-  }
 
-  if (loading) return (
-    <div style={{
-      background: '#04040A', height: '100vh', display: 'flex',
-      alignItems: 'center', justifyContent: 'center',
-      fontFamily: 'monospace', color: '#FF3C6E',
-      fontSize: 14, letterSpacing: '0.2em'
-    }}>
-      LOADING ALERT FEED...
-    </div>
-  );
 
-  return (
-    <div style={{
-      background: '#04040A', minHeight: '100vh',
-      color: '#F0F0FA', fontFamily: "'Courier New', monospace"
-    }}>
+useEffect(() => {
 
-      {/* Header */}
-      <div style={{
-        background: '#080812', borderBottom: '1px solid #1A1A2E',
-        padding: '14px 20px', display: 'flex',
-        alignItems: 'center', justifyContent: 'space-between'
-      }}>
-        <div>
-          <div style={{ fontSize: 16, fontWeight: 900, letterSpacing: '0.06em' }}>
-            HAS <span style={{ color: '#FF3C6E' }}>ALERTS</span>
-            <span style={{ fontSize: 8, color: '#484860', marginLeft: 10, letterSpacing: '0.2em' }}>
-              COMPLIANCE LOG · INBOUND FEED · LIVE
-            </span>
-          </div>
-          <div style={{ fontSize: 8, color: '#484860', letterSpacing: '0.15em', marginTop: 2 }}>
-            AUTO-REFRESH 30s · SBI CAPITAL · aim2030app.com
-          </div>
-        </div>
-        <div style={{ display: 'flex', gap: 20 }}>
-          {[
-            ['TOTAL', stats.total, '#C0C0D8'],
-            ['RESPONSES', stats.responses, '#FF3C6E'],
-            ['OUTREACH', stats.outreach, '#00E5FF'],
-            ['PIPELINE', stats.pipeline, '#2ECC71'],
-          ].map(([l, v, c]) => (
-            <div key={l as string} style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: 7, color: '#484860', letterSpacing: '0.15em' }}>{l}</div>
-              <div style={{ fontSize: 14, fontWeight: 900, color: c as string }}>{v}</div>
-            </div>
-          ))}
-        </div>
-      </div>
+fetch(”/api/alerts”)
 
-      {/* Filter tabs */}
-      <div style={{
-        background: '#080812', borderBottom: '1px solid #1A1A2E',
-        padding: '0 20px', display: 'flex'
-      }}>
-        {uniqueTypes.map(t => (
-          <button key={t} onClick={() => setFilter(t)} style={{
-            background: 'transparent', border: 'none',
-            borderBottom: `2px solid ${filter === t ? typeColor(t) : 'transparent'}`,
-            color: filter === t ? typeColor(t) : '#484860',
-            padding: '8px 14px', fontFamily: 'inherit', fontSize: 8,
-            letterSpacing: '0.1em', cursor: 'pointer', textTransform: 'uppercase'
-          }}>{t === 'ALL' ? 'ALL' : t.replace(/_/g, ' ')}</button>
-        ))}
-        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', padding: '0 14px' }}>
-          <div style={{
-            width: 6, height: 6, borderRadius: '50%',
-            background: '#FF3C6E', boxShadow: '0 0 6px #FF3C6E'
-          }} />
-          <span style={{ fontSize: 7, color: '#FF3C6E', marginLeft: 6, letterSpacing: '0.15em' }}>LIVE</span>
-        </div>
-      </div>
+.then(r => r.json())
 
-      {/* Alert feed */}
-      <div style={{ padding: '16px', maxWidth: 900, margin: '0 auto' }}>
-        {filtered.length === 0 ? (
-          <div style={{
-            textAlign: 'center', padding: '60px',
-            color: '#484860', fontSize: 10, letterSpacing: '0.18em'
-          }}>
-            NO ALERTS YET
-          </div>
-        ) : (
-          filtered.map(alert => (
-            <div key={alert.id}
-              onClick={() => setExpanded(expanded === alert.id ? null : alert.id)}
-              style={{
-                background: expanded === alert.id
-                  ? `${typeColor(alert.content_type)}08` : '#080812',
-                border: `1px solid ${typeColor(alert.content_type)}30`,
-                borderLeft: `3px solid ${typeColor(alert.content_type)}`,
-                borderRadius: 3, padding: '12px 14px',
-                marginBottom: 8, cursor: 'pointer'
-              }}>
+.then(d => { setAlerts(Array.isArray(d) ? d : []); setLoading(false); })
 
-              {/* Row header */}
-              <div style={{
-                display: 'flex', justifyContent: 'space-between',
-                alignItems: 'center', marginBottom: 6
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{
-                    fontSize: 7, color: typeColor(alert.content_type),
-                    border: `1px solid ${typeColor(alert.content_type)}`,
-                    padding: '1px 6px', borderRadius: 2,
-                    letterSpacing: '0.1em', fontWeight: 700
-                  }}>{alert.content_type.replace(/_/g, ' ').toUpperCase()}</span>
-                  <span style={{ fontSize: 8, color: '#484860' }}>ID: {alert.content_id}</span>
-                  {alert.content_type === 'sms_response' && (
-                    <span style={{
-                      fontSize: 7, color: '#FF3C6E',
-                      background: 'rgba(255,60,110,0.1)',
-                      padding: '1px 6px', borderRadius: 2
-                    }}>INBOUND</span>
-                  )}
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontSize: 8, color: '#484860' }}>
-                    {formatTime(alert.review_date)}
-                  </span>
-                  <span style={{ fontSize: 8, color: '#484860' }}>
-                    {expanded === alert.id ? '▲' : '▼'}
-                  </span>
-                </div>
-              </div>
+.catch(() => {
 
-              {/* Notes */}
-              <div style={{ fontSize: 10, color: '#C0C0D8', lineHeight: 1.6 }}>
-                {alert.notes}
-              </div>
+setAlerts([]);
 
-              {/* Expanded detail */}
-              {expanded === alert.id && (
-                <div style={{
-                  marginTop: 10, padding: '10px',
-                  background: '#0C0C1A', borderRadius: 3,
-                  border: '1px solid #1A1A2E'
-                }}>
-                  <div style={{ display: 'flex', gap: 16, marginBottom: 10 }}>
-                    <div>
-                      <div style={{ fontSize: 7, color: '#484860' }}>REVIEWED</div>
-                      <div style={{
-                        fontSize: 9,
-                        color: alert.human_reviewed ? '#2ECC71' : '#484860'
-                      }}>
-                        {alert.human_reviewed ? '✓ YES' : '○ NO'}
-                      </div>
-                    </div>
-                    <div>
-                      <div style={{ fontSize: 7, color: '#484860' }}>APPROVED</div>
-                      <div style={{
-                        fontSize: 9,
-                        color: alert.approved ? '#2ECC71' : '#484860'
-                      }}>
-                        {alert.approved ? '✓ YES' : '○ NO'}
-                      </div>
-                    </div>
-                    <div>
-                      <div style={{ fontSize: 7, color: '#484860' }}>CONTENT ID</div>
-                      <div style={{ fontSize: 9, color: '#C0C0D8' }}>{alert.content_id}</div>
-                    </div>
-                  </div>
+setLoading(false);
 
-                  {/* Action buttons for inbound SMS */}
-                  {alert.content_type === 'sms_response' && (
-                    <div style={{ display: 'flex', gap: 6 }}>
-                      <a href={`tel:${alert.content_id}`}
-                        onClick={e => e.stopPropagation()}
-                        style={{
-                          flex: 1, textAlign: 'center',
-                          background: 'rgba(46,204,113,0.15)',
-                          border: '1px solid #2ECC71', color: '#2ECC71',
-                          padding: '6px', borderRadius: 2, fontSize: 7,
-                          textDecoration: 'none', letterSpacing: '0.1em'
-                        }}>
-                        CALL BACK
-                      </a>
-                      <a href={`sms:${alert.content_id}`}
-                        onClick={e => e.stopPropagation()}
-                        style={{
-                          flex: 1, textAlign: 'center',
-                          background: 'rgba(0,229,255,0.15)',
-                          border: '1px solid #00E5FF', color: '#00E5FF',
-                          padding: '6px', borderRadius: 2, fontSize: 7,
-                          textDecoration: 'none', letterSpacing: '0.1em'
-                        }}>
-                        SMS BACK
-                      </a>
-                    </div>
-                  )}
+});
 
-                  {/* Action buttons for outreach SMS */}
-                  {alert.content_type === 'outreach_sms' && (
-                    <div style={{ display: 'flex', gap: 6 }}>
-                      <a href={`tel:${alert.content_id}`}
-                        onClick={e => e.stopPropagation()}
-                        style={{
-                          flex: 1, textAlign: 'center',
-                          background: 'rgba(244,162,97,0.15)',
-                          border: '1px solid #F4A261', color: '#F4A261',
-                          padding: '6px', borderRadius: 2, fontSize: 7,
-                          textDecoration: 'none', letterSpacing: '0.1em'
-                        }}>
-                        CALL SELLER
-                      </a>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          ))
-        )}
-      </div>
+}, []);
 
-      <style>{`
-        @keyframes pulse {
-          0%,100%{opacity:1;transform:scale(1)}
-          50%{opacity:0.3;transform:scale(0.5)}
-        }
-      `}</style>
-    </div>
-  );
+
+
+const filtered = alerts.filter(a => filter === “ALL” || a.alert_type === filter);
+
+const unread = alerts.filter(a => !a.read).length;
+
+
+
+const markRead = async (id) => {
+
+setAlerts(prev => prev.map(a => a.id === id ? { …a, read: true } : a));
+
+await fetch(”/api/alerts”, {
+
+method: “PATCH”,
+
+headers: { “Content-Type”: “application/json” },
+
+body: JSON.stringify({ id, read: true }),
+
+});
+
+};
+
+
+
+const markAllRead = async () => {
+
+setAlerts(prev => prev.map(a => ({ …a, read: true })));
+
+await fetch(”/api/alerts”, {
+
+method: “PATCH”,
+
+headers: { “Content-Type”: “application/json” },
+
+body: JSON.stringify({ markAllRead: true }),
+
+});
+
+};
+
+
+
+return (
+
+<div className="min-h-screen bg-zinc-950 text-zinc-100 p-6">
+
+<div className="max-w-4xl mx-auto">
+
+
+
+```
+
+    <div className="flex items-center justify-between mb-6">
+
+      <div className="flex items-center gap-3">
+
+        <h1 className="text-2xl font-bold tracking-tight">Alerts</h1>
+
+        {unread > 0 && (
+
+          <span className="bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+
+            {unread}
+
+          </span>
+
+        )}
+
+      </div>
+
+      {unread > 0 && (
+
+        <button
+
+          onClick={markAllRead}
+
+          className="text-zinc-400 hover:text-zinc-200 text-xs transition-colors"
+
+        >
+
+          Mark all read
+
+        </button>
+
+      )}
+
+    </div>
+
+
+
+    <div className="flex gap-3 mb-6 flex-wrap">
+
+      {ALERT_TYPES.map(t => (
+
+        <button
+
+          key={t}
+
+          onClick={() => setFilter(t)}
+
+          className={"px-3 py-2 rounded text-xs font-medium transition-colors " +
+
+            (filter === t ? "bg-zinc-100 text-zinc-900" : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700")}
+
+        >
+
+          {t.replace(/_/g, " ")}
+
+        </button>
+
+      ))}
+
+    </div>
+
+
+
+    {loading ? (
+
+      <p className="text-zinc-500 text-sm">Loading...</p>
+
+    ) : filtered.length === 0 ? (
+
+      <div className="text-center py-20">
+
+        <p className="text-zinc-500 text-sm">No alerts.</p>
+
+        <p className="text-zinc-600 text-xs mt-2">Alerts are generated automatically by the Sentinel pipeline.</p>
+
+      </div>
+
+    ) : (
+
+      <div className="space-y-3">
+
+        {filtered.map(a => (
+
+          <div
+
+            key={a.id}
+
+            className={"rounded-lg border p-4 transition-colors " +
+
+              (a.read ? "bg-zinc-900 border-zinc-800" : "bg-zinc-900 border-zinc-700")}
+
+          >
+
+            <div className="flex items-start justify-between gap-4">
+
+              <div className="flex items-start gap-3">
+
+                <span className={"w-8 h-8 rounded flex items-center justify-center text-xs font-bold flex-shrink-0 " +
+
+                  (ALERT_COLORS[a.alert_type] ?? "bg-zinc-700 text-zinc-200")}>
+
+                  {ALERT_ICONS[a.alert_type] ?? "!"}
+
+                </span>
+
+                <div>
+
+                  <div className="flex items-center gap-2 mb-1">
+
+                    <span className={"text-xs font-medium px-2 py-0.5 rounded " +
+
+                      (ALERT_COLORS[a.alert_type] ?? "bg-zinc-700 text-zinc-200")}>
+
+                      {(a.alert_type ?? "ALERT").replace(/_/g, " ")}
+
+                    </span>
+
+                    {!a.read && <span className="w-2 h-2 bg-red-500 rounded-full"></span>}
+
+                  </div>
+
+                  <p className="text-zinc-200 text-sm font-medium">{a.address ?? "Unknown address"}</p>
+
+                  <p className="text-zinc-400 text-xs mt-0.5">{a.message ?? "--"}</p>
+
+                  {a.lead_score && (
+
+                    <p className={"text-xs mt-1 font-medium " +
+
+                      (a.lead_score >= 70 ? "text-green-400" : a.lead_score >= 40 ? "text-yellow-400" : "text-red-400")}>
+
+                      Lead score: {a.lead_score}
+
+                    </p>
+
+                  )}
+
+                </div>
+
+              </div>
+
+              <div className="flex flex-col items-end gap-2 flex-shrink-0">
+
+                <p className="text-zinc-600 text-xs">
+
+                  {a.created_at ? new Date(a.created_at).toLocaleDateString() : "--"}
+
+                </p>
+
+                {!a.read && (
+
+                  <button
+
+                    onClick={() => markRead(a.id)}
+
+                    className="text-zinc-500 hover:text-zinc-300 text-xs transition-colors"
+
+                  >
+
+                    Dismiss
+
+                  </button>
+
+                )}
+
+              </div>
+
+            </div>
+
+          </div>
+
+        ))}
+
+      </div>
+
+    )}
+
+  </div>
+
+</div>
+
+```
+
+
+
+);
+
 }
