@@ -40,7 +40,9 @@ export async function POST(req) {
     });
 
     const data = await response.json();
-    const text = data?.content?.[0]?.text ?? data?.error?.message ?? "No response from Sentinel.";
+    const content = data?.content;
+    const text = Array.isArray(content) && content.length > 0 ? content[0].text : (data?.error?.message ?? "No response from Sentinel.");
+
 
     return NextResponse.json({
       response: text,
