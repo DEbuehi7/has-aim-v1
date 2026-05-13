@@ -10,9 +10,9 @@ const PLANET_COLORS = {
 };
 
 const PLANET_LORE = {
-  Sonthera: "Combat civilization. Arena tournaments. Underground betting. Antifragile — grows stronger under stress.",
-  REye:     "Surveillance intelligence world. Data brokers, signal hunters, information warfare. Every node sees everything.",
-  LAP:      "Los Angeles Parallax. Mirror world of SELA. Distressed multifamily, DSA signals, planetary real estate intelligence.",
+  Sonthera: "Combat civilization. Arena tournaments. Underground betting. Antifragile.",
+  REye:     "Surveillance intelligence world. Data brokers, signal hunters, information warfare.",
+  LAP:      "Los Angeles Parallax. Mirror world of SELA. Distressed multifamily intelligence.",
 };
 
 export default function PulsePage() {
@@ -26,16 +26,19 @@ export default function PulsePage() {
     fetch("/api/pulse/planets")
       .then(r => r.json())
       .then(d => {
-        setPlanets(Array.isArray(d.planets) ? d.planets : []);
-        setCharacters(Array.isArray(d.characters) ? d.characters : []);
-        if (d.planets?.length > 0) setSelected(d.planets[0]);
+        const pl = Array.isArray(d.planets) ? d.planets : [];
+        const ch = Array.isArray(d.characters) ? d.characters : [];
+        setPlanets(pl);
+        setCharacters(ch);
+        if (pl.length > 0) setSelected(pl[0]);
         setLoading(false);
       })
       .catch(() => setLoading(false));
   }, []);
 
   const planet = selected;
-  const colors = planet ? (PLANET_COLORS[planet.name] ?? { primary: "#6C5CE7", secondary: "#A29BFE", bg: "#0A0010" }) : null;
+  const planetName = planet ? (planet.label ?? planet.name ?? "") : "";
+  const colors = planetName ? (PLANET_COLORS[planetName] ?? { primary: "#6C5CE7", secondary: "#A29BFE", bg: "#0A0010" }) : null;
   const planetChars = characters.filter(c => c.planet_id === planet?.id);
 
   return (
@@ -56,14 +59,16 @@ export default function PulsePage() {
       </div>
 
       <div style={{ padding: "24px", maxWidth: "1100px", margin: "0 auto" }}>
-
         {loading ? (
           <div style={{ color: "#444", fontSize: "12px", padding: "40px 0" }}>Loading planets...</div>
+        ) : planets.length === 0 ? (
+          <div style={{ color: "#444", fontSize: "12px", padding: "40px 0" }}>No planets seeded yet.</div>
         ) : (
           <>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px", marginBottom: "24px" }}>
               {planets.map(p => {
-                const c = PLANET_COLORS[p.name] ?? { primary: "#6C5CE7", secondary: "#A29BFE", bg: "#0A0010" };
+                const pName = p.label ?? p.name ?? "";
+                const c = PLANET_COLORS[pName] ?? { primary: "#6C5CE7", secondary: "#A29BFE", bg: "#0A0010" };
                 const isSelected = selected?.id === p.id;
                 return (
                   <button
@@ -78,15 +83,14 @@ export default function PulsePage() {
                       cursor: "pointer",
                       textAlign: "left",
                       transition: "all 0.2s",
-                      boxShadow: isSelected ? "0 0 24px " + c.primary + "20" : "none",
                     }}
                   >
                     <div style={{ fontSize: "9px", color: c.secondary, letterSpacing: "0.2em", marginBottom: "6px", textTransform: "uppercase" }}>
-                      {p.status ?? "ACTIVE"}
+                      {p.token ?? "ACTIVE"}
                     </div>
-                    <div style={{ fontSize: "16px", fontWeight: 800, color: "#FFF", marginBottom: "8px" }}>{p.name}</div>
+                    <div style={{ fontSize: "16px", fontWeight: 800, color: "#FFF", marginBottom: "8px" }}>{pName}</div>
                     <div style={{ fontSize: "10px", color: "#666", lineHeight: 1.6 }}>
-                      {PLANET_LORE[p.name] ?? p.description}
+                      {PLANET_LORE[pName] ?? "Planetary intelligence node."}
                     </div>
                   </button>
                 );
@@ -95,7 +99,6 @@ export default function PulsePage() {
 
             {planet && colors && (
               <div style={{ background: "#0D0D0F", border: "1px solid " + colors.primary + "30", borderRadius: "8px", overflow: "hidden" }}>
-
                 <div style={{ borderBottom: "1px solid #1A1A2E", display: "flex" }}>
                   {["world", "characters", "content", "intel"].map(tab => (
                     <button
@@ -118,21 +121,18 @@ export default function PulsePage() {
                 </div>
 
                 <div style={{ padding: "24px" }}>
-
                   {activeTab === "world" && (
                     <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                      <div>
-                        <div style={{ fontSize: "9px", color: colors.secondary, letterSpacing: "0.2em", marginBottom: "8px" }}>
-                          WORLD BRIEF — {planet.name.toUpperCase()}
-                        </div>
-                        <div style={{ fontSize: "13px", color: "#CCC", lineHeight: 1.8 }}>
-                          {planet.description}
-                        </div>
+                      <div style={{ fontSize: "9px", color: colors.secondary, letterSpacing: "0.2em", marginBottom: "8px" }}>
+                        WORLD BRIEF — {planetName.toUpperCase()}
+                      </div>
+                      <div style={{ fontSize: "13px", color: "#CCC", lineHeight: 1.8 }}>
+                        {PLANET_LORE[planetName] ?? "Planetary intelligence node."}
                       </div>
                       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px" }}>
                         {[
                           { label: "Characters", value: planetChars.length },
-                          { label: "Status", value: planet.status ?? "ACTIVE" },
+                          { label: "Token", value: planet.token ?? "--" },
                           { label: "Platform", value: "AIMedia Pulse" },
                         ].map(s => (
                           <div key={s.label} style={{ background: "#141416", border: "1px solid #1A1A2E", borderRadius: "4px", padding: "12px" }}>
@@ -147,31 +147,26 @@ export default function PulsePage() {
                   {activeTab === "characters" && (
                     <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                       <div style={{ fontSize: "9px", color: colors.secondary, letterSpacing: "0.2em", marginBottom: "4px" }}>
-                        CHARACTERS — {planet.name.toUpperCase()}
+                        CHARACTERS — {planetName.toUpperCase()}
                       </div>
                       {planetChars.length === 0 ? (
-                        <div style={{ color: "#333", fontSize: "11px" }}>No characters seeded yet.</div>
+                        <div style={{ color: "#333", fontSize: "11px" }}>No characters for this planet.</div>
                       ) : planetChars.map(c => (
                         <div key={c.id} style={{ background: "#141416", border: "1px solid " + colors.primary + "30", borderLeft: "3px solid " + colors.primary, borderRadius: "4px", padding: "14px" }}>
                           <div style={{ fontSize: "12px", fontWeight: 700, color: "#FFF", marginBottom: "4px" }}>{c.name}</div>
-                          <div style={{ fontSize: "11px", color: "#777", lineHeight: 1.6 }}>{c.description}</div>
+                          <div style={{ fontSize: "11px", color: "#777", lineHeight: 1.6 }}>{c.style_pack ? JSON.stringify(c.style_pack) : "--"}</div>
                         </div>
                       ))}
                     </div>
                   )}
 
                   {activeTab === "content" && (
-                    <div style={{ color: "#333", fontSize: "11px" }}>
-                      Content pipeline — V2V synthesis queue coming in Sprint 6.
-                    </div>
+                    <div style={{ color: "#333", fontSize: "11px" }}>Content pipeline coming in Sprint 6.</div>
                   )}
 
                   {activeTab === "intel" && (
-                    <div style={{ color: "#333", fontSize: "11px" }}>
-                      Planet intelligence feed — AIM Anomaly OS integration coming in Sprint 6.
-                    </div>
+                    <div style={{ color: "#333", fontSize: "11px" }}>Planet intelligence feed coming in Sprint 6.</div>
                   )}
-
                 </div>
               </div>
             )}
