@@ -44,8 +44,9 @@ export async function POST(req) {
     const text = Array.isArray(content) && content.length > 0 ? content[0].text : (data?.error?.message ?? "No response from Sentinel.");
 
 
-    return NextResponse.json({
-      response: text,
+    console.log("FULL RESPONSE:", JSON.stringify(data));
+return NextResponse.json({
+  response: text,
       persona: persona.name,
       role: persona.role,
       color: persona.color,
