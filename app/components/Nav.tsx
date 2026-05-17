@@ -9,13 +9,13 @@ const LINKS = [
 { href: "/contacts",   label: "CONTACTS",    color: "#00E5FF" },
 { href: "/anomaly",    label: "ANOMALY OS",  color: "#FF006E" },
 { href: "/pulse",      label: "PULSE",       color: "#C77DFF" },
+{ href: "/aura8", label: "AURA8", color: "#FF006E" },
 { href: "/pure",       label: "PURE",        color: "#C8A96E" },
 { href: "/grants",     label: "GRANTS",      color: "#FFD700" },
 { href: "/field",      label: "FIELD OPS",   color: "#F4A261" },
 { href: "/vendors",    label: "VENDORS",     color: "#C77DFF" },
 { href: "/settings",   label: "SETTINGS",    color: "#808080" },
 { href: "/callscript", label: "CALL",        color: "#2ECC71" },
-{ href: "/aura8", label: "AURA8", color: "#FF006E" },
 ];
 
 export default function Nav() {
