@@ -1,65 +1,65 @@
-“use client”;
-export const dynamic = “force-dynamic”;
+"use client";
+export const dynamic = "force-dynamic";
 
-import { useState } from “react”;
+import { useState } from "react";
 
 const REVENUE_STREAMS = [
-{ id: “ad”,        label: “Ad Network RPM”,       status: “PLANNED”,  color: “#FF006E”, desc: “ExoClick / JuicyAds. RPM-based display ads. No subscription required.” },
-{ id: “affiliate”, label: “Affiliate Commissions”, status: “PLANNED”,  color: “#FF5BB5”, desc: “Lifetime commission structure. Candy AI + CrushOn AI affiliate programs.” },
-{ id: “stripe”,    label: “Stripe Membership”,     status: “BUILDING”, color: “#C77DFF”, desc: “Tiered subscription. $9.99/mo or $79.99 lifetime. Boomer demographic.” },
-{ id: “telegram”,  label: “Telegram Premium”,      status: “PLANNED”,  color: “#00B4D8”, desc: “Private premium channel. Herald Bot. Exclusive content drops.” },
-{ id: “sponsored”, label: “Sponsored Nodes”,       status: “PLANNED”,  color: “#F59E0B”, desc: “Creator node sponsorship packages. Featured placement in Kinetic Grid.” },
-{ id: “forge”,     label: “Forge — Creator Tools”,  status: “PLANNED”,  color: “#22C55E”, desc: “AI creator toolkit. Proprietary Boomer personas. Phase 2 revenue engine.” },
+{ id: "ad",        label: "Ad Network RPM",       status: "PLANNED",  color: "#FF006E", desc: "ExoClick / JuicyAds. RPM-based display ads. No subscription required." },
+{ id: "affiliate", label: "Affiliate Commissions", status: "PLANNED",  color: "#FF5BB5", desc: "Lifetime commission structure. Candy AI + CrushOn AI affiliate programs." },
+{ id: "stripe",    label: "Stripe Membership",     status: "BUILDING", color: "#C77DFF", desc: "Tiered subscription. $9.99/mo or $79.99 lifetime. Boomer demographic." },
+{ id: "telegram",  label: "Telegram Premium",      status: "PLANNED",  color: "#00B4D8", desc: "Private premium channel. Herald Bot. Exclusive content drops." },
+{ id: "sponsored", label: "Sponsored Nodes",       status: "PLANNED",  color: "#F59E0B", desc: "Creator node sponsorship packages. Featured placement in Kinetic Grid." },
+{ id: "forge",     label: "Forge -- Creator Tools",  status: "PLANNED",  color: "#22C55E", desc: "AI creator toolkit. Proprietary Boomer personas. Phase 2 revenue engine." },
 ];
 
 const STATUS_COLORS = {
-PLANNED:  “#4A4A4E”,
-BUILDING: “#F59E0B”,
-ACTIVE:   “#22C55E”,
+PLANNED:  "#4A4A4E",
+BUILDING: "#F59E0B",
+ACTIVE:   "#22C55E",
 };
 
 const LENSES = [
-{ id: “discovery”, label: “Discovery”, color: “#FF006E”, desc: “Curated content feed. Guardian AI scraper. Verified sources only.” },
-{ id: “premium”,   label: “Premium”,   color: “#C77DFF”, desc: “Subscription-gated content. Stripe-protected. Age-verified users only.” },
-{ id: “forge”,     label: “Forge”,     color: “#F59E0B”, desc: “AI creator tools. Generate, publish, monetize. Proprietary persona engine.” },
+{ id: "discovery", label: "Discovery", color: "#FF006E", desc: "Curated content feed. Guardian AI scraper. Verified sources only." },
+{ id: "premium",   label: "Premium",   color: "#C77DFF", desc: "Subscription-gated content. Stripe-protected. Age-verified users only." },
+{ id: "forge",     label: "Forge",     color: "#F59E0B", desc: "AI creator tools. Generate, publish, monetize. Proprietary persona engine." },
 ];
 
 const COMPLIANCE = [
-{ item: “Age Verification (Veriff/AgeID)”, status: “PENDING”, priority: “CRITICAL” },
-{ item: “DMCA Agent Registration (copyright.gov)”, status: “PENDING”, priority: “HIGH” },
-{ item: “Three-Leg Payment Rail (Stripe + Telegram Stars + Coinbase)”, status: “PARTIAL”, priority: “HIGH” },
-{ item: “Privacy Policy + Terms of Service”, status: “PENDING”, priority: “HIGH” },
-{ item: “CA AB 2257 Compliance Review”, status: “PENDING”, priority: “CRITICAL” },
-{ item: “Reddit Niche Staking (r/BoomerEntertainment)”, status: “PENDING”, priority: “MEDIUM” },
-{ item: “Telegram Channel Launch”, status: “PENDING”, priority: “MEDIUM” },
+{ item: "Age Verification (Veriff/AgeID)", status: "PENDING", priority: "CRITICAL" },
+{ item: "DMCA Agent Registration (copyright.gov)", status: "PENDING", priority: "HIGH" },
+{ item: "Three-Leg Payment Rail (Stripe + Telegram Stars + Coinbase)", status: "PARTIAL", priority: "HIGH" },
+{ item: "Privacy Policy + Terms of Service", status: "PENDING", priority: "HIGH" },
+{ item: "CA AB 2257 Compliance Review", status: "PENDING", priority: "CRITICAL" },
+{ item: "Reddit Niche Staking (r/BoomerEntertainment)", status: "PENDING", priority: "MEDIUM" },
+{ item: "Telegram Channel Launch", status: "PENDING", priority: "MEDIUM" },
 ];
 
 export default function Aura8Page() {
-const [activeTab, setActiveTab] = useState(“overview”);
-const [activeLens, setActiveLens] = useState(“discovery”);
+const [activeTab, setActiveTab] = useState("overview");
+const [activeLens, setActiveLens] = useState("discovery");
 const [ageConfirmed, setAgeConfirmed] = useState(false);
 
 if (!ageConfirmed) {
 return (
-<div style={{ minHeight: “100vh”, background: “#060608”, display: “flex”, alignItems: “center”, justifyContent: “center”, fontFamily: “DM Mono, monospace” }}>
-<div style={{ background: “#0D0D0F”, border: “1px solid #FF006E40”, borderRadius: “8px”, padding: “40px”, maxWidth: “400px”, textAlign: “center” }}>
-<div style={{ fontSize: “10px”, color: “#FF006E”, letterSpacing: “0.2em”, marginBottom: “16px” }}>AURA8</div>
-<div style={{ fontSize: “20px”, fontWeight: 800, color: “#FFF”, marginBottom: “8px” }}>Age Verification Required</div>
-<div style={{ fontSize: “11px”, color: “#666”, lineHeight: 1.7, marginBottom: “24px” }}>
+<div style={{ minHeight: "100vh", background: "#060608", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "DM Mono, monospace" }}>
+<div style={{ background: "#0D0D0F", border: "1px solid #FF006E40", borderRadius: "8px", padding: "40px", maxWidth: "400px", textAlign: "center" }}>
+<div style={{ fontSize: "10px", color: "#FF006E", letterSpacing: "0.2em", marginBottom: "16px" }}>AURA8</div>
+<div style={{ fontSize: "20px", fontWeight: 800, color: "#FFF", marginBottom: "8px" }}>Age Verification Required</div>
+<div style={{ fontSize: "11px", color: "#666", lineHeight: 1.7, marginBottom: "24px" }}>
 This platform contains adult content. You must be 18 or older to enter. By continuing you confirm you are of legal age in your jurisdiction.
 </div>
-<div style={{ fontSize: “9px”, color: “#444”, marginBottom: “20px” }}>
+<div style={{ fontSize: "9px", color: "#444", marginBottom: "20px" }}>
 Full age verification (Veriff/AgeID) coming soon. This is a pre-launch shell.
 </div>
 <button
 onClick={() => setAgeConfirmed(true)}
-style={{ background: “#FF006E”, border: “none”, borderRadius: “4px”, padding: “12px 32px”, color: “#FFF”, fontSize: “11px”, letterSpacing: “0.1em”, cursor: “pointer”, fontFamily: “DM Mono, monospace”, width: “100%”, marginBottom: “8px” }}
+style={{ background: "#FF006E", border: "none", borderRadius: "4px", padding: "12px 32px", color: "#FFF", fontSize: "11px", letterSpacing: "0.1em", cursor: "pointer", fontFamily: "DM Mono, monospace", width: "100%", marginBottom: "8px" }}
 >
-I AM 18 OR OLDER — ENTER
+I AM 18 OR OLDER -- ENTER
 </button>
 <button
-onClick={() => window.location.href = “/dashboard”}
-style={{ background: “transparent”, border: “1px solid #252528”, borderRadius: “4px”, padding: “12px 32px”, color: “#555”, fontSize: “11px”, letterSpacing: “0.1em”, cursor: “pointer”, fontFamily: “DM Mono, monospace”, width: “100%” }}
+onClick={() => window.location.href = "/dashboard"}
+style={{ background: "transparent", border: "1px solid #252528", borderRadius: "4px", padding: "12px 32px", color: "#555", fontSize: "11px", letterSpacing: "0.1em", cursor: "pointer", fontFamily: "DM Mono, monospace", width: "100%" }}
 >
 EXIT
 </button>
@@ -69,12 +69,11 @@ EXIT
 }
 
 return (
-<div style={{ minHeight: “100vh”, background: “#060608”, color: “#E8E8F0”, fontFamily: “DM Mono, monospace” }}>
+<div style={{ minHeight: "100vh", background: "#060608", color: "#E8E8F0", fontFamily: "DM Mono, monospace" }}>
 
-```
   <div style={{ background: "#0D0D0F", borderBottom: "1px solid #FF006E30", padding: "16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
     <div>
-      <div style={{ fontSize: "10px", letterSpacing: "0.2em", color: "#FF006E", marginBottom: "4px" }}>AURA8 — DOSA PROTOCOL</div>
+      <div style={{ fontSize: "10px", letterSpacing: "0.2em", color: "#FF006E", marginBottom: "4px" }}>AURA8 -- DOSA PROTOCOL</div>
       <div style={{ fontSize: "20px", fontWeight: 800, color: "#FFF" }}>AI ADULT PLATFORM</div>
     </div>
     <div style={{ fontSize: "9px", color: "#333", letterSpacing: "0.15em", textAlign: "right" }}>
@@ -160,9 +159,9 @@ return (
             <div style={{ fontSize: "13px", color: "#CCC", lineHeight: 1.8, marginBottom: "20px" }}>{l.desc}</div>
             <div style={{ background: "#141416", borderRadius: "4px", padding: "16px", textAlign: "center" }}>
               <div style={{ fontSize: "11px", color: "#444" }}>
-                {l.id === "discovery" ? "Guardian AI scraper — coming Sprint 6" :
+                {l.id === "discovery" ? "Guardian AI scraper -- coming Sprint 6" :
                  l.id === "premium" ? "Stripe + age verification required before launch" :
-                 "Proprietary persona engine — Phase 2"}
+                 "Proprietary persona engine -- Phase 2"}
               </div>
             </div>
           </div>
@@ -208,7 +207,6 @@ return (
 
   </div>
 </div>
-```
 
 );
 }
