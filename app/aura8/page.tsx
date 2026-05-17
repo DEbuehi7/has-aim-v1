@@ -124,7 +124,7 @@ return (
           <div style={{ fontSize: "9px", color: "#555", letterSpacing: "0.2em", marginBottom: "12px" }}>PRE-LAUNCH CHECKLIST</div>
           {[
             { item: "Age verification provider selected", done: false },
-            { item: "DMCA agent registered at copyright.gov", done: false },
+            { item: "DMCA agent registered at copyright.gov", done: true },
             { item: "Stripe account connected", done: false },
             { item: "Telegram channel created", done: false },
             { item: "Candy AI affiliate signed up", done: false },
