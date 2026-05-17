@@ -14,6 +14,7 @@ targets = [
 "app/api/pure/properties/route.ts",
     "app/components/Nav.tsx",
     "app/pure/page.tsx",
+    "app/aura8/page.tsx",
 ]
 
 fixed = 0
