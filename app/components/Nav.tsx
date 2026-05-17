@@ -15,6 +15,7 @@ const LINKS = [
 { href: "/vendors",    label: "VENDORS",     color: "#C77DFF" },
 { href: "/settings",   label: "SETTINGS",    color: "#808080" },
 { href: "/callscript", label: "CALL",        color: "#2ECC71" },
+{ href: "/aura8", label: "AURA8", color: "#FF006E" },
 ];
 
 export default function Nav() {
