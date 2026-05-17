@@ -11,6 +11,9 @@ targets = [
     "app/contacts/[id]/page.tsx",
     "app/alerts/page.tsx",
     "app/deals/page.tsx",
+"app/api/pure/properties/route.ts",
+    "app/components/Nav.tsx",
+    "app/pure/page.tsx",
 ]
 
 fixed = 0
