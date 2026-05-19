@@ -57,12 +57,9 @@ fetch("/api/contacts")
 
 
 const filtered = contacts.filter(c => {
-
-const matchSearch =
-
-(c.full_name ?? "").toLowerCase().includes(search.toLowerCase()) ||
-
-(c.phone_primary ?? "").includes(search);
+    const matchSearch =
+      (c.full_name ?? "").toLowerCase().includes(search.toLowerCase()) ||
+      (c.phone_primary ?? "").includes(search);
 
 const matchFilter = filter === "ALL" || c.status === filter;
 
