@@ -60,7 +60,7 @@ const filtered = contacts.filter(c => {
 
 const matchSearch =
 
-c.full_name.toLowerCase().includes(search.toLowerCase()) ||
+(c.full_name ?? "").toLowerCase().includes(search.toLowerCase()) ||
 
 (c.phone_primary ?? "").includes(search);
 
