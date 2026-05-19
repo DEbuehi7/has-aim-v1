@@ -22,7 +22,7 @@ try {
 
 const { data, error } = await supabase
 
-.from("has_compliance_log")
+.from("aim_compliance")
 
 .select("*")
 
@@ -57,7 +57,7 @@ if (body.markAllRead) {
 
   const { error } = await supabase
 
-    .from("has_compliance_log")
+    .from("aim_compliance")
 
     .update({ read: true })
 
@@ -75,7 +75,7 @@ const { id, ...updates } = body;
 
 const { data, error } = await supabase
 
-  .from("has_compliance_log")
+  .from("aim_compliance")
 
   .update(updates)
 
