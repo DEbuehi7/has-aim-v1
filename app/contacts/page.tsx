@@ -165,6 +165,8 @@ return (
           </thead>
 
           <tbody className="divide-y divide-zinc-800">
+{filtered.length === 0 && <tr><td colSpan={8} style={{ padding: "20px", color: "#444", textAlign: "center" }}>No contacts match filter.</td></tr>}
+
 
             {filtered.map(c => (
 
