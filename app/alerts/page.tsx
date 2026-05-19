@@ -117,7 +117,7 @@ export default function AlertsPage() {
                         </p>
                         {a.due_date && (
                           <p style={{ fontSize: "10px", color: "#71717A", marginTop: "4px" }}>
-                            Due: {a.due_date} — {a.responsible_party ?? "--"}
+                            Due: {a.due_date} -- {a.responsible_party ?? "--"}
                           </p>
                         )}
                       </div>
