@@ -19,7 +19,7 @@ ACTIVE:   "#22C55E",
 };
 
 const LENSES = [
-{ id: "discovery", label: "Discovery", color: "#FF006E", desc: "Curated content feed. Guardian AI scraper. Verified sources only." },
+{ id: "discovery", label: "Discovery", color: "#FF006E", desc: "Curated content feed. Guardian AI scraper. Verified sources only. Powered by CrushOn AI." },
 { id: "premium",   label: "Premium",   color: "#C77DFF", desc: "Subscription-gated content. Stripe-protected. Age-verified users only." },
 { id: "forge",     label: "Forge",     color: "#F59E0B", desc: "AI creator tools. Generate, publish, monetize. Proprietary persona engine." },
 ];
