@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 
 
-const ALERT_TYPES = ["ALL", "TAX_DELINQUENT", "CODE_VIOLATION", "ABSENTEE_OWNER", "HIGH_SCORE", "PRICE_DROP"];
+const ALERT_TYPES = ["ALL", "HAP_SUBMISSION", "ABATEMENT", "TAX", "INSPECTION", "GENERAL"];
 
 
 
