@@ -85,7 +85,7 @@ export default function CallScriptPage() {
         <div style={{ background: "#18181B", border: "1px solid #27272A", borderRadius: "8px", padding: "20px" }}>
           <h1 style={{ fontSize: "18px", fontWeight: 800, color: "#FAFAFA", marginBottom: "4px" }}>{contact.full_name}</h1>
           <p style={{ fontSize: "11px", color: "#71717A", marginBottom: "16px" }}>
-            {contact.role ?? "OWNER"}{contact.mailing_address ? " — " + contact.mailing_address : ""}
+            {contact.role ?? "OWNER"}{contact.mailing_address ? " -- " + contact.mailing_address : ""}
           </p>
           <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
             <a href={"tel:" + contact.phone_primary} style={{
@@ -103,7 +103,7 @@ export default function CallScriptPage() {
           </div>
           {contact.dnc && (
             <p style={{ marginTop: "12px", color: "#F87171", fontSize: "11px", fontWeight: 600 }}>
-              WARNING: DO NOT CALL — DNC flag active
+              WARNING: DO NOT CALL -- DNC flag active
             </p>
           )}
         </div>
@@ -114,8 +114,8 @@ export default function CallScriptPage() {
             ["INTRO", SCRIPT.intro(firstName)],
             ["PITCH", SCRIPT.pitch],
             ["VOICEMAIL", SCRIPT.voicemail(firstName)],
-            ["OBJECTION — NOT SELLING", SCRIPT.objection_not_selling],
-            ["OBJECTION — NOT INTERESTED", SCRIPT.objection_not_interested],
+            ["OBJECTION -- NOT SELLING", SCRIPT.objection_not_selling],
+            ["OBJECTION -- NOT INTERESTED", SCRIPT.objection_not_interested],
           ].map(function(item) {
             return (
               <div key={item[0]}>
@@ -160,7 +160,7 @@ export default function CallScriptPage() {
             fontSize: "13px", fontWeight: 700, cursor: saving || saved ? "not-allowed" : "pointer",
             fontFamily: "DM Mono, monospace", letterSpacing: "0.05em",
           }}>
-            {saved ? "Saved — returning..." : saving ? "Saving..." : "Save and Return to Contacts"}
+            {saved ? "Saved -- returning..." : saving ? "Saving..." : "Save and Return to Contacts"}
           </button>
         </div>
 
