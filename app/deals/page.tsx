@@ -35,7 +35,7 @@ export default function DealsPage() {
     return matchStage && matchSearch;
   });
 
-  const totalARV = filtered.reduce((sum, d) => sum + (d.arv ?? 0), 0);
+  const totalARV = filtered.reduce((sum, d) => sum + (d.arv_estimate ?? 0), 0);
   const totalOffer = filtered.reduce((sum, d) => sum + (d.offer_price ?? 0), 0);
   const activeCount = deals.filter(d => !["CLOSED","DEAD"].includes(d.stage)).length;
 
@@ -108,7 +108,7 @@ export default function DealsPage() {
                           {d.stage ?? "NEW"}
                         </span>
                       </td>
-                      <td style={{ padding: "12px 16px", color: "#86EFAC" }}>{d.arv ? "$" + d.arv.toLocaleString() : "--"}</td>
+                      <td style={{ padding: "12px 16px", color: "#86EFAC" }}>{d.arv_estimate ? "$" + d.arv_estimate.toLocaleString() : "--"}</td>
                       <td style={{ padding: "12px 16px", color: "#93C5FD" }}>{d.offer_price ? "$" + d.offer_price.toLocaleString() : "--"}</td>
                       <td style={{ padding: "12px 16px", color: (d.lead_score ?? 0) >= 70 ? "#86EFAC" : (d.lead_score ?? 0) >= 40 ? "#FCD34D" : "#F87171", fontWeight: 600 }}>
                         {d.lead_score ?? 0}
