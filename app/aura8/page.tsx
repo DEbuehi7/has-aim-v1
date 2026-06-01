@@ -7,7 +7,7 @@ const CRUSHON_LINK = "https://crushon.ai/?ref=mtk1mdd&mist=1";
 
 const REVENUE_STREAMS = [
   { id: "subscription", label: "Subscriptions",        status: "BUILDING", color: "#FF006E", desc: "Pro $7.99/mo. Solace8 $9.99/mo. Boomer-first design. Discreet billing." },
-  { id: "affiliate",   label: "Affiliate Commissions", status: "ACTIVE",   color: "#FF5BB5", desc: "CrushOn AI — 30% recurring commission. Live now." },
+  { id: "affiliate",   label: "Affiliate Commissions", status: "ACTIVE",   color: "#FF5BB5", desc: "CrushOn AI -- 30% recurring commission. Live now." },
   { id: "ad",          label: "Ad Network RPM",        status: "PLANNED",  color: "#C77DFF", desc: "ExoClick / JuicyAds. Premium Boomer CPM $8-25." },
   { id: "token",       label: "Token Economy",         status: "PLANNED",  color: "#F59E0B", desc: "100 tokens $9.99. 500 tokens $39.99. Premium unlocks." },
   { id: "whitelabel",  label: "White Label Platform",  status: "PLANNED",  color: "#00B4D8", desc: "License Aura8 stack to operators. $2K-10K/mo per operator." },
@@ -22,13 +22,13 @@ const TIERS = [
 
 const COMPLIANCE = [
   { item: "CCBill payment processing application", status: "PENDING",  priority: "CRITICAL" },
-  { item: "Age verification — IP + timestamp logging", status: "ACTIVE", priority: "CRITICAL" },
-  { item: "2257 Records Custodian — Daniel Osazee Ebuehi", status: "ACTIVE", priority: "CRITICAL" },
+  { item: "Age verification -- IP + timestamp logging", status: "ACTIVE", priority: "CRITICAL" },
+  { item: "2257 Records Custodian -- Daniel Osazee Ebuehi", status: "ACTIVE", priority: "CRITICAL" },
   { item: "DMCA Agent Registration (copyright.gov)", status: "DONE",    priority: "HIGH" },
-  { item: "Veriff age verification — live integration", status: "PENDING", priority: "HIGH" },
+  { item: "Veriff age verification -- live integration", status: "PENDING", priority: "HIGH" },
   { item: "AWEmpire / AdultForce affiliate program", status: "PENDING", priority: "MEDIUM" },
-  { item: "PornHub channel — traffic funnel", status: "PENDING",       priority: "MEDIUM" },
-  { item: "Discreet billing descriptor — SOLACE MEDIA", status: "PENDING", priority: "HIGH" },
+  { item: "PornHub channel -- traffic funnel", status: "PENDING",       priority: "MEDIUM" },
+  { item: "Discreet billing descriptor -- SOLACE MEDIA", status: "PENDING", priority: "HIGH" },
 ];
 
 const LENSES = [
@@ -65,7 +65,7 @@ export default function Aura8Page() {
     return (
       <div style={{ minHeight: "100vh", background: "#060608", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "DM Mono, monospace", padding: "24px" }}>
         <div style={{ background: "#0D0D0F", border: "1px solid #FF006E40", borderRadius: "8px", padding: "40px", maxWidth: "420px", width: "100%", textAlign: "center" }}>
-          <div style={{ fontSize: "10px", color: "#FF006E", letterSpacing: "0.2em", marginBottom: "16px" }}>AURA8 — DOSA PROTOCOL</div>
+          <div style={{ fontSize: "10px", color: "#FF006E", letterSpacing: "0.2em", marginBottom: "16px" }}>AURA8 -- DOSA PROTOCOL</div>
           <div style={{ fontSize: "22px", fontWeight: 800, color: "#FFF", marginBottom: "12px" }}>Age Verification Required</div>
           <div style={{ fontSize: "12px", color: "#666", lineHeight: 1.8, marginBottom: "16px" }}>
             This platform contains adult content intended for users 18 years of age or older. By entering you confirm you are of legal age in your jurisdiction.
@@ -78,7 +78,7 @@ export default function Aura8Page() {
             disabled={verifying}
             style={{ background: "#FF006E", border: "none", borderRadius: "4px", padding: "14px 32px", color: "#FFF", fontSize: "12px", fontWeight: 700, cursor: verifying ? "not-allowed" : "pointer", fontFamily: "DM Mono, monospace", width: "100%", marginBottom: "10px", letterSpacing: "0.08em" }}
           >
-            {verifying ? "VERIFYING..." : "I AM 18 OR OLDER — ENTER"}
+            {verifying ? "VERIFYING..." : "I AM 18 OR OLDER -- ENTER"}
           </button>
           <button
             onClick={() => window.location.href = "/dashboard"}
@@ -99,7 +99,7 @@ export default function Aura8Page() {
 
       <div style={{ background: "#0D0D0F", borderBottom: "1px solid #FF006E30", padding: "16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div>
-          <div style={{ fontSize: "10px", letterSpacing: "0.2em", color: "#FF006E", marginBottom: "4px" }}>AURA8 — DOSA PROTOCOL</div>
+          <div style={{ fontSize: "10px", letterSpacing: "0.2em", color: "#FF006E", marginBottom: "4px" }}>AURA8 -- DOSA PROTOCOL</div>
           <div style={{ fontSize: "20px", fontWeight: 800, color: "#FFF" }}>AI ADULT PLATFORM</div>
         </div>
         <div style={{ textAlign: "right" }}>
@@ -128,7 +128,7 @@ export default function Aura8Page() {
             <div style={{ background: "#0D0D0F", border: "1px solid #FF006E30", borderRadius: "8px", padding: "20px" }}>
               <div style={{ fontSize: "9px", color: "#FF006E", letterSpacing: "0.2em", marginBottom: "8px" }}>PLATFORM THESIS</div>
               <div style={{ fontSize: "13px", color: "#CCC", lineHeight: 1.8 }}>
-                Aura8 targets the underserved Boomer demographic (60-78) in the global adult content market ($100B+). Three core values: Privacy. Discretion. Cognitive and Emotional Utility. The loneliness economy drives willingness to pay — AI companionship addresses a deeper need than content alone. Identity: Dosa. Domain: aura8.fun.
+                Aura8 targets the underserved Boomer demographic (60-78) in the global adult content market ($100B+). Three core values: Privacy. Discretion. Cognitive and Emotional Utility. The loneliness economy drives willingness to pay -- AI companionship addresses a deeper need than content alone. Identity: Dosa. Domain: aura8.fun.
               </div>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px" }}>
@@ -147,7 +147,7 @@ export default function Aura8Page() {
               ))}
             </div>
             <div style={{ background: "#0D0D0F", border: "1px solid #FF006E20", borderRadius: "8px", padding: "20px" }}>
-              <div style={{ fontSize: "9px", color: "#FF006E", letterSpacing: "0.2em", marginBottom: "12px" }}>EXPLORE NOW — AFFILIATE</div>
+              <div style={{ fontSize: "9px", color: "#FF006E", letterSpacing: "0.2em", marginBottom: "12px" }}>EXPLORE NOW -- AFFILIATE</div>
               <div style={{ fontSize: "12px", color: "#9A9A9F", lineHeight: 1.7, marginBottom: "16px" }}>
                 Experience AI companionship now through our CrushOn AI partnership. Private, intelligent, available immediately.
               </div>
@@ -209,9 +209,9 @@ export default function Aura8Page() {
                 <div style={{ fontSize: "13px", color: "#CCC", lineHeight: 1.8, marginBottom: "20px" }}>{l.desc}</div>
                 <div style={{ background: "#141416", borderRadius: "4px", padding: "16px", textAlign: "center" }}>
                   <div style={{ fontSize: "11px", color: "#444" }}>
-                    {l.id === "discovery" ? "AI curation pipeline — n8n + Guardian scraper — Sprint 6" :
+                    {l.id === "discovery" ? "AI curation pipeline -- n8n + Guardian scraper -- Sprint 6" :
                      l.id === "premium"   ? "CCBill integration required before launch" :
-                     "Token economy — Phase 2 build"}
+                     "Token economy -- Phase 2 build"}
                   </div>
                 </div>
               </div>
@@ -252,7 +252,7 @@ export default function Aura8Page() {
             <div style={{ background: "#0D0D0F", border: "1px solid #FF006E30", borderRadius: "4px", padding: "14px", marginBottom: "8px" }}>
               <div style={{ fontSize: "11px", color: "#FF006E", marginBottom: "6px", fontWeight: 700 }}>2257 RECORDS CUSTODIAN</div>
               <div style={{ fontSize: "10px", color: "#666", lineHeight: 1.6 }}>
-                Daniel Osazee Ebuehi — 300 West Valley Blvd #3018, Alhambra CA 91803. IP address and timestamp logged on every age confirmation. CCBill handles performer verification for all processed content.
+                Daniel Osazee Ebuehi -- 300 West Valley Blvd #3018, Alhambra CA 91803. IP address and timestamp logged on every age confirmation. CCBill handles performer verification for all processed content.
               </div>
             </div>
             {COMPLIANCE.map((c, i) => (
@@ -273,7 +273,7 @@ export default function Aura8Page() {
 
       <div style={{ background: "#0D0D0F", borderTop: "1px solid #1A1A2E", padding: "12px 24px", textAlign: "center" }}>
         <div style={{ fontSize: "9px", color: "#3F3F46", letterSpacing: "0.1em" }}>
-          AURA8&#8482; — SMILING BUBBLES INC. — ADULTS 18+ ONLY — 2257 COMPLIANT — PRIVACY POLICY — TERMS
+          AURA8&#8482; -- SMILING BUBBLES INC. -- ADULTS 18+ ONLY -- 2257 COMPLIANT -- PRIVACY POLICY -- TERMS
         </div>
       </div>
 
