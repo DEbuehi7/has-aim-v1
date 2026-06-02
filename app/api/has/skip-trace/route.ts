@@ -1,40 +1,44 @@
-export const dynamic = "force-dynamic";
-import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+export const dynamic = "force-dynamic";import { NextResponse } from "next/server";
 
 export async function POST(req) {
-  try {
-    const body = await req.json();
-    const { address, city, state, zip, owner_name } = body;
+try {
+const body = await req.json();
+const { address, city, state, zip, owner_name } = body;
 
-    if (!address) {
-      return NextResponse.json({ error: "address is required" }, { status: 400 });
-    }
+const token = process.env.BATCHDATA_API_TOKEN;
 
-    const batchRes = await fetch("https://api.batchdata.com/api/v1/property/skip-trace", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.BATCHDATA_API_TOKEN}`,
-      },
-      body: JSON.stringify({
-        requests: [
-          {
-            propertyAddress: {
-              street: address,
-              city: city || "Los Angeles",
-              state: state || "CA",
-              zip: zip || "",
-            },
-          },
-        ],
-      }),
-    });
+const batchRes = await fetch("https://api.batchdata.com/api/v1/property/skip-trace", {
+method: "POST",
+headers: {
+"Content-Type": "application/json",
+"Authorization": `Bearer ${token}`,
+},
+body: JSON.stringify({
+requests: [
+{
+propertyAddress: {
+street: address,
+city: city || "Los Angeles",
+state: state || "CA",
+zip: zip || "",
+},
+},
+],
+}),
+});
+
+const rawText = await batchRes.text();
+
+return NextResponse.json({
+status: batchRes.status,
+token_prefix: token ? token.substring(0, 6) : "MISSING",
+raw: rawText.substring(0, 500),
+});
+
+} catch (e) {
+return NextResponse.json({ error: String(e) }, { status: 500 });
+}
+}    });
 
     if (!batchRes.ok) {
       const err = await batchRes.text();
