@@ -54,7 +54,7 @@ const bdRes = await fetch(BATCHDATA_URL + "/property/skip-trace", {
 
   body: JSON.stringify({
 
-    requests: [{ address }],
+    requests: [{ propertyAddress: { street: address, city: "Los Angeles", state: "CA" } }],
 
   }),
 
