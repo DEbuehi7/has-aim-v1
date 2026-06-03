@@ -16,7 +16,7 @@ process.env.SUPABASE_SERVICE_ROLE_KEY
 
 
 
-const BATCHDATA_URL = "https://api.batchdata.com/api/v1";
+const BATCHDATA_URL = "https://api.batchdata.com/api/v3";
 
 const BATCHDATA_KEY = process.env.BATCHDATA_API_TOKEN;
 
