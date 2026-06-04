@@ -126,7 +126,7 @@ const { data, error } = await supabase
 
 
 
-if (error) throw error;
+if (error) throw new Error(JSON.stringify(error));
 
 
 
