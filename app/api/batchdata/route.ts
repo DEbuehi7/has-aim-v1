@@ -83,29 +83,17 @@ const ownerName = result?.property?.owners?.[0]?.name?.full ?? null;
 
 
 const updates = {
-
-  skip_traced: true,
-
-  batchdata_id: result?.id ?? null,
-
-  phone_primary: phones[0]?.number ?? null,
-
-  phone_secondary: phones[1]?.number ?? null,
-
-  email: emails[0]?.address ?? null,
-
-  full_name: owner?.fullName ?? null,
-
-  mailing_address: owner?.mailingAddress ?? null,
-
-  phone_verified: phones[0]?.verified ?? false,
-
-  dnc: phones[0]?.dnc ?? false,
-
-  tcpa_compliant: phones[0]?.tcpa ?? true,
-
-  updated_at: new Date().toISOString(),
-
+  skip_traced: true,
+  batchdata_id: result?.property?.id ?? null,
+  phone_primary: phones[0]?.number ?? null,
+  phone_secondary: phones[1]?.number ?? null,
+  email: emails[0]?.email ?? null,
+  full_name: ownerName,
+  mailing_address: result?.property?.mailingAddress?.fullAddress ?? null,
+  phone_verified: phones[0]?.tested ?? false,
+  dnc: phones[0]?.dnc ?? false,
+  tcpa_compliant: phones[0]?.tcpa ?? false,
+  updated_at: new Date().toISOString(),
 };
 
 
