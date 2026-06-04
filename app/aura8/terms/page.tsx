@@ -28,6 +28,14 @@ export default function Aura8Terms() {
       body: "You agree not to: (a) access the platform if you are under 18; (b) share your account credentials; (c) reproduce, distribute, or resell any content from the platform; (d) use the platform to harass, harm, or exploit any person; (e) attempt to reverse-engineer or extract any AI model or system from the platform; (f) use automated tools to scrape or access the platform without written permission.",
     },
     {
+  title: "6a. Deepfake Prohibition",
+  body: "Users are strictly prohibited from using Aura8 to generate deepfake content of any kind. Deepfake content is defined as any AI-generated image, video, or audio that replicates or simulates the likeness of a real person without explicit documented consent. All Aura8 companions are fully synthetic AI constructs with no connection to real persons.",
+},
+{
+  title: "6b. AI Content Disclosure",
+  body: "All content generated on Aura8 is produced entirely by artificial intelligence systems. No real human performers, likenesses, or identities are used in any content on this platform. All companion personas are fictional synthetic constructs. Content is labeled as AI-generated at all access points.",
+},
+    {
       title: "7. Privacy",
       body: "Your use of the platform is governed by our Privacy Policy, available at aura8.fun/aura8/privacy. We do not sell your personal data. Email addresses collected via waitlist are used solely to notify you of platform launch and updates.",
     },
