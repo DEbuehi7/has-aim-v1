@@ -74,13 +74,11 @@ if (!bdRes.ok) {
 
 
 
-const result = bdData?.results?.[0];
-
-const phones = result?.phones ?? [];
-
-const emails = result?.emails ?? [];
-
-const owner = result?.owner ?? {};
+const result = bdData?.result?.data?.[0];
+const person = result?.persons?.[0] ?? {};
+const phones = person?.phones ?? [];
+const emails = person?.emails ?? [];
+const ownerName = result?.property?.owners?.[0]?.name?.full ?? null;
 
 
 
