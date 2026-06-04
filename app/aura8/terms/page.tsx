@@ -167,9 +167,11 @@ export default function Aura8Terms() {
         textAlign: "center",
       }}>
         <div style={{ fontSize: "9px", color: "#3F3F46", letterSpacing: "0.1em" }}>
-          AURA8 -- SMILING BUBBLES INC. -- ADULTS 18+ ONLY --{" "}
-          <a href="/aura8/privacy" style={{ color: "#52525B", textDecoration: "none" }}>PRIVACY POLICY</a>
-        </div>
+  AURA8 -- SMILING BUBBLES INC. -- ADULTS 18+ ONLY --{" "}
+  <a href="/aura8/privacy" style={{ color: "#52525B", textDecoration: "none" }}>PRIVACY</a>
+  {" "}--{" "}
+  <a href="/aura8/acceptable-use" style={{ color: "#52525B", textDecoration: "none" }}>ACCEPTABLE USE</a>
+</div>
       </div>
     </div>
   );
