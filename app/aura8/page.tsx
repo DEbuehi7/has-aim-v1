@@ -74,6 +74,23 @@ export default function Aura8Page() {
           <div style={{ background: "#141416", border: "1px solid #252528", borderRadius: "4px", padding: "12px", marginBottom: "20px", fontSize: "10px", color: "#444", lineHeight: 1.6 }}>
             Your IP address and confirmation timestamp are logged for compliance purposes per 18 U.S.C. § 2257. Records Custodian: Daniel Osazee Ebuehi, 300 West Valley Blvd #3018, Alhambra CA 91803.
           </div>
+          <div style={{ display: "flex", alignItems: "flex-start", gap: "10px", marginBottom: "16px", textAlign: "left" }}>
+            <input
+              type="checkbox"
+              id="tos"
+              checked={tosAccepted}
+              onChange={e => setTosAccepted(e.target.checked)}
+              style={{ marginTop: "2px", accentColor: "#FF006E", cursor: "pointer", flexShrink: 0 }}
+            />
+            <label htmlFor="tos" style={{ fontSize: "11px", color: "#71717A", lineHeight: 1.7, cursor: "pointer" }}>
+              I confirm I am 18 or older and agree to the{" "}
+              <a href="/aura8/terms" style={{ color: "#FF006E", textDecoration: "none" }}>Terms of Service</a>
+              {", "}
+              <a href="/aura8/privacy" style={{ color: "#FF006E", textDecoration: "none" }}>Privacy Policy</a>
+              {", and "}
+              <a href="/aura8/acceptable-use" style={{ color: "#FF006E", textDecoration: "none" }}>Acceptable Use Policy</a>
+            </label>
+          </div>
           <button
             onClick={handleAgeConfirm}
             disabled={verifying}
