@@ -28,10 +28,10 @@ export default function CallScriptPage() {
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    fetch("/api/contacts")
-      .then(r => r.json())
-      .then(function(data) {
-        const c = data.find(function(x) { return x.id === Number(id); });
+   fetch("/api/has/contacts/list")
+  .then(r => r.json())
+  .then(function(data) {
+    const c = (data.contacts ?? []).find(function(x) { return x.id === Number(id); });
         if (c) { setContact(c); setNotes(c.notes ?? ""); setStatus(c.status ?? "NEW"); }
         setLoading(false);
       })
