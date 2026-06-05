@@ -106,7 +106,7 @@ export default function CallLog() {
               }}
             >
               <div style={{ fontSize: "13px", fontWeight: 700 }}>{c.full_name ?? "Unknown"}</div>
-              <div style={{ fontSize: "11px", color: "#71717A", marginTop: "2px" }}>{c.property_address}</div>
+             <div style={{ fontSize: "11px", color: "#71717A", marginTop: "2px" }}>{c.notes}</div>
               <div style={{ fontSize: "10px", color: "#52525B", marginTop: "2px" }}>
                 {c.phone_primary ?? "No phone"} -- Attempts: {c.call_attempts ?? 0}
               </div>
