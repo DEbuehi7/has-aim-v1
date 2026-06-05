@@ -10,9 +10,9 @@ const supabase = createClient(
 export async function GET() {
   try {
     const { data, error } = await supabase
-  .from("has_contacts")
-  .select("id, full_name, mailing_address, phone_primary, phone_secondary, call_attempts, status, next_call_at, notes, dnc")
-  .order("next_call_at", { ascending: true, nullsFirst: false });
+      .from("has_contacts")
+      .select("id, full_name, mailing_address, phone_primary, phone_secondary, call_attempts, status, next_call_at, notes, dnc, skip_traced")
+      .order("next_call_at", { ascending: true, nullsFirst: false });
 
     if (error) throw new Error(JSON.stringify(error));
 
