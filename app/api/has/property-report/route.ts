@@ -139,12 +139,12 @@ Return this exact JSON structure:
     const claudeJson = await claudeRes.json();
     const claudeText = claudeJson?.content?.[0]?.text ?? "{}";
     let scenarios = {};
-    try {
-      scenarios = JSON.parse(claudeText);
-    } catch (e) {
-      scenarios = { error: "Claude parse failed", raw: claudeText };
-    }
-
+try {
+  const cleaned = claudeText.replace(/```json|```/g, "").trim();
+  scenarios = JSON.parse(cleaned);
+} catch (e) {
+  scenarios = { error: "Claude parse failed", raw: claudeText };
+}
     // STEP 4 -- Write to has_property_reports
     const { data: report, error: dbError } = await supabase
       .from("has_property_reports")
