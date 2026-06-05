@@ -42,6 +42,7 @@ export default function Aura8Page() {
   const [activeLens, setActiveLens]   = useState("discovery");
   const [ageConfirmed, setAgeConfirmed] = useState(false);
   const [verifying, setVerifying]     = useState(false);
+  const [tosAccepted, setTosAccepted] = useState(false);
 
   const handleAgeConfirm = async () => {
     setVerifying(true);
