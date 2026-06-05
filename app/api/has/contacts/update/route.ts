@@ -9,7 +9,8 @@ const supabase = createClient(
 
 export async function POST(req) {
   try {
-    const { contact_id, status, notes, next_call_at } = await req.json();
+    const body = await req.json();
+    const { contact_id, status, notes, next_call_at, increment_attempts } = body;
 
     if (!contact_id) {
       return NextResponse.json({ error: "contact_id required" }, { status: 400 });
@@ -24,12 +25,15 @@ export async function POST(req) {
     const updates: Record<string, unknown> = {
       updated_at: new Date().toISOString(),
       last_called_at: new Date().toISOString(),
-      call_attempts: (current?.call_attempts ?? 0) + 1,
     };
 
+    if (increment_attempts !== false) {
+      updates.call_attempts = (current?.call_attempts ?? 0) + 1;
+    }
+
     if (status) updates.status = status;
-    if (notes) updates.notes = notes;
-    if (next_call_at) updates.next_call_at = next_call_at;
+    if (notes !== undefined) updates.notes = notes;
+    if (next_call_at !== undefined) updates.next_call_at = next_call_at || null;
 
     const { data, error } = await supabase
       .from("has_contacts")
