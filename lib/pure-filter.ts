@@ -77,3 +77,4 @@ export function validateOutput(text: string): string {
     cleaned = cleaned.replace(new RegExp(p, "gi"), "");
   });
   return cleaned.trim();
+}
