@@ -93,7 +93,7 @@ export default function Aura8Page() {
           </div>
           <button
             onClick={handleAgeConfirm}
-            disabled={verifying}
+            disabled={verifying || !tosAccepted}
             style={{ background: "#FF006E", border: "none", borderRadius: "4px", padding: "14px 32px", color: "#FFF", fontSize: "12px", fontWeight: 700, cursor: verifying ? "not-allowed" : "pointer", fontFamily: "DM Mono, monospace", width: "100%", marginBottom: "10px", letterSpacing: "0.08em" }}
           >
             {verifying ? "VERIFYING..." : "I AM 18 OR OLDER -- ENTER"}
