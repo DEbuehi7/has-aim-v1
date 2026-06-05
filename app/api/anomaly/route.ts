@@ -43,6 +43,15 @@ export async function POST(req) {
 
     const data = await response.json();
     const content = data?.content;
+    const        model: "claude-sonnet-4-5",
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: [{ role: "user", content: message }],
+      }),
+    });
+
+    const data = await response.json();
+    const content = data?.content;
     const rawText = Array.isArray(content) && content.length > 0
       ? content[0].text
       : (data?.error?.message ?? "No response from Sentinel.");
