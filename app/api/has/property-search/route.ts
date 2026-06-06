@@ -40,7 +40,7 @@ export async function POST(req) {
     let skipped = 0;
 
     for (const r of properties) {
-      const fullAddress = r?.address?.fullAddress ?? r?.address?.street ?? null;
+      const num = r?.address?.houseNumber ?? ""; const st = r?.address?.street ?? null; const fullAddress = st ? (num + " " + st).trim() : null;
       const ownerName = r?.owner?.fullName ?? null;
       const mailingAddress = r?.owner?.mailingAddress?.street ?? null;
       const taxDefault = r?.quickLists?.taxDefault ?? false;
