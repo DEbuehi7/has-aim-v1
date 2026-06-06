@@ -134,7 +134,7 @@ export default function Aura8Demo() {
                   </div>
                 )}
               </div>
-              <div style={{ borderTop: "1px solid #1A1A2E", padding: "16px 24px", display: "flex", gap: "12px" }}>
+              <div style={{ borderTop: "1px solid #1A1A2E", padding: "16px 24px", display: "flex", gap: "12px", position: "sticky", bottom: "0", background: "#060608", zIndex: 10 }}>
                 <input
                   value={message}
                   onChange={e => setMessage(e.target.value)}
