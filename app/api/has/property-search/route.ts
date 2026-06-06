@@ -87,6 +87,59 @@ export async function POST(req) {
   } catch (e) {
     return NextResponse.json({ error: String(e) }, { status: 500 });
   }
+}    }
+
+    const results = bdJson?.results ?? bdJson?.result?.data ?? bdJson?.data ?? [];
+
+    if (!results.length) {
+      return NextResponse.json({
+        success: false,
+        message: "No results",
+        keys: Object.keys(bdJson),
+        sample: JSON.stringify(bdJson).substring(0, 300),
+      }, { status: 404 });
+    }
+
+    let inserted = 0;
+    let skipped = 0;
+
+    for (const r of results) {
+      const address = r?.address?.street ?? r?.street ?? null;
+      const fullAddress = r?.address?.fullAddress ?? address;
+      const ownerName = r?.owner?.fullName ?? null;
+      const mailingAddress = r?.owner?.mailingAddress?.street ?? null;
+      const taxDelinquent = r?.quickLists?.taxDefault ?? false;
+      const absenteeOwner = r?.quickLists?.absenteeOwner ?? false;
+
+      if (!fullAddress) { skipped++; continue; }
+
+      const { error } = await supabase
+        .from("has_contacts")
+        .upsert({
+          full_name: ownerName,
+          mailing_address: mailingAddress,
+          notes: fullAddress,
+          source: "BATCHDATA_SEARCH",
+          status: "NEW",
+          skip_traced: false,
+          dnc: false,
+          do_not_call: false,
+          updated_at: new Date().toISOString(),
+        }, { onConflict: "notes" });
+
+      if (error) { skipped++; } else { inserted++; }
+    }
+
+    return NextResponse.json({
+      success: true,
+      results_returned: results.length,
+      inserted,
+      skipped,
+    });
+
+  } catch (e) {
+    return NextResponse.json({ error: String(e) }, { status: 500 });
+  }
 }                dataSelection: {
                   corePropertyData: true,
                 },
