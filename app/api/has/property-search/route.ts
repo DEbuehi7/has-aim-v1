@@ -58,7 +58,7 @@ export async function POST(req) {
         dnc: false,
         do_not_call: false,
         updated_at: new Date().toISOString(),
-      }, { onConflict: "notes" });
+      }, { onConflict: "notes", ignoreDuplicates: true });
 
       if (error) { console.error("upsert error:", JSON.stringify(error)); skipped++; } else { inserted++; }
     }
