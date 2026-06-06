@@ -60,7 +60,7 @@ export async function POST(req) {
         updated_at: new Date().toISOString(),
       }, { onConflict: "notes" });
 
-      if (error) { skipped++; } else { inserted++; }
+      if (error) { console.error("upsert error:", JSON.stringify(error)); skipped++; } else { inserted++; }
     }
 
     return NextResponse.json({
