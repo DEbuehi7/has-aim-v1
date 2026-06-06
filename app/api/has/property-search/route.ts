@@ -21,10 +21,7 @@ export async function POST(req) {
         "Authorization": "Bearer " + process.env.BATCHDATA_API_TOKEN,
       },
       body: JSON.stringify({
-        searchCriteria: {
-          query: zip + ", CA",
-          quickList: quickList,
-        },
+        searchCriteria: quickList ? { query: zip + ", CA", quickList: quickList } : { query: zip + ", CA" },
         options: { take },
       }),
     });
