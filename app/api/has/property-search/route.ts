@@ -10,7 +10,9 @@ const supabase = createClient(
 export async function POST(req) {
   try {
     const body = await req.json();
-    const limit = body.limit ?? 50;
+    const zip = body.zip ?? "90011";
+    const quickList = body.quickList ?? "absentee-owner";
+    const take = body.take ?? 25;
 
     const bdRes = await fetch("https://api.batchdata.com/api/v1/property/search", {
       method: "POST",
@@ -18,27 +20,34 @@ export async function POST(req) {
         "Content-Type": "application/json",
         "Authorization": "Bearer " + process.env.BATCHDATA_API_TOKEN,
       },
-      body: JSON.stringify({ filters: { state: "CA", city: "Los Angeles" }, limit }),
+      body: JSON.stringify({
+        searchCriteria: {
+          query: zip + ", CA",
+          quickList: quickList,
+        },
+        options: { take },
+      }),
     });
 
-    const rawText = await bdRes.text();
-    let bdJson;
-    try { bdJson = JSON.parse(rawText); } catch (e) {
-      return NextResponse.json({ error: "Parse error", raw: rawText.substring(0, 300) }, { status: 500 });
-    }
+    const bdJson = await bdRes.json();
+    const properties = bdJson?.results?.properties ?? [];
 
-    const results = bdJson.results ?? bdJson.data ?? [];
-    if (results.length === 0) {
-      return NextResponse.json({ success: false, keys: Object.keys(bdJson), sample: rawText.substring(0, 300) }, { status: 404 });
+    if (properties.length === 0) {
+      return NextResponse.json({ success: false, message: "No properties found", meta: bdJson?.results?.meta }, { status: 404 });
     }
 
     let inserted = 0;
     let skipped = 0;
-    for (const r of results) {
+
+    for (const r of properties) {
       const fullAddress = r?.address?.fullAddress ?? r?.address?.street ?? null;
       const ownerName = r?.owner?.fullName ?? null;
       const mailingAddress = r?.owner?.mailingAddress?.street ?? null;
+      const taxDefault = r?.quickLists?.taxDefault ?? false;
+      const absenteeOwner = r?.quickLists?.absenteeOwner ?? false;
+
       if (fullAddress === null) { skipped++; continue; }
+
       const { error } = await supabase.from("has_contacts").upsert({
         full_name: ownerName,
         mailing_address: mailingAddress,
@@ -50,10 +59,19 @@ export async function POST(req) {
         do_not_call: false,
         updated_at: new Date().toISOString(),
       }, { onConflict: "notes" });
+
       if (error) { skipped++; } else { inserted++; }
     }
 
-    return NextResponse.json({ success: true, results_returned: results.length, inserted, skipped });
+    return NextResponse.json({
+      success: true,
+      properties_found: bdJson?.results?.meta?.resultsFound,
+      results_returned: properties.length,
+      inserted,
+      skipped,
+      zip,
+      quickList,
+    });
 
   } catch (e) {
     return NextResponse.json({ error: String(e) }, { status: 500 });
