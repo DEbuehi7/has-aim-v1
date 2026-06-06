@@ -11,7 +11,7 @@ export async function POST(req) {
   try {
     const body = await req.json();
     const zip = body.zip ?? "90011";
-    const quickList = body.quickList ?? "absentee-owner";
+    const quickList = body.quickList ?? null;
     const take = body.take ?? 25;
 
     const bdRes = await fetch("https://api.batchdata.com/api/v1/property/search", {
