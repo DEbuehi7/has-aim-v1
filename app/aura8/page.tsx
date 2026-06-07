@@ -235,8 +235,7 @@ export default function Aura8Page() {
         </div>
       </div>
     </div>
-  );
-}          <div style={{ fontSize: "12px", color: "#666", lineHeight: 1.8, marginBottom: "16px" }}>
+            <div style={{ fontSize: "12px", color: "#666", lineHeight: 1.8, marginBottom: "16px" }}>
             This platform contains adult content intended for users 18 years of age or older. By entering you confirm you are of legal age in your jurisdiction.
           </div>
           <div style={{ background: "#141416", border: "1px solid #252528", borderRadius: "4px", padding: "12px", marginBottom: "20px", fontSize: "10px", color: "#444", lineHeight: 1.6 }}>
