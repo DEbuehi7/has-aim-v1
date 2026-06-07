@@ -58,4 +58,28 @@ export async function POST(req) {
   } catch (e) {
     return NextResponse.json({ error: String(e) }, { status: 500 });
   }
+}    const sessionUrl = veriffData?.verification?.url;
+
+    if (!sessionId) {
+      return NextResponse.json({ error: "Veriff session creation failed", detail: veriffData }, { status: 502 });
+    }
+
+    await supabase.from("aura8_veriff_sessions").insert({
+      session_id: sessionId,
+      vendor_data: vendorData,
+      status: "created",
+      ip_address: ip,
+      user_agent: userAgent,
+    });
+
+    return NextResponse.json({
+      success: true,
+      session_id: sessionId,
+      session_url: sessionUrl,
+      vendor_data: vendorData,
+    });
+
+  } catch (e) {
+    return NextResponse.json({ error: String(e) }, { status: 500 });
+  }
 }
