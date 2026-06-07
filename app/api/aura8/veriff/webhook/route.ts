@@ -52,22 +52,4 @@ export async function POST(req) {
   } catch (e) {
     return NextResponse.json({ error: String(e) }, { status: 500 });
   }
-}        status: decision ?? "unknown",
-        decision: JSON.stringify(payload?.data),
-        decided_at: new Date().toISOString(),
-      })
-      .eq("session_id", sessionId);
-
-    if (code === 9001) {
-      await supabase
-        .from("aura8_veriff_sessions")
-        .update({ status: "approved" })
-        .eq("session_id", sessionId);
-    }
-
-    return NextResponse.json({ success: true, session_id: sessionId, decision });
-
-  } catch (e) {
-    return NextResponse.json({ error: String(e) }, { status: 500 });
-  }
 }
