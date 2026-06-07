@@ -54,7 +54,7 @@ export default function Aura8Page() {
       const veriffRes = await fetch("/api/aura8/veriff/create-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: crypto.randomUUID() }),
+        body: JSON.stringify({ userId: Math.random().toString(36).substring(2) + Date.now().toString(36) }),
       });
       const veriffData = await veriffRes.json();
       if (veriffData?.session_url) {
