@@ -58,7 +58,8 @@ export default function Aura8Page() {
       });
       const veriffData = await veriffRes.json();
       if (veriffData?.session_url) {
-        window.location.href = veriffData.session_url;
+        console.log('Redirecting to:', veriffData.session_url);
+        window.open(veriffData.session_url, '_self');
         return;
       }
     } catch (e) {
