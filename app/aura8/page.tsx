@@ -55,6 +55,23 @@ export default function Aura8Page() {
           confirmed: true,
         }),
       });
+      const veriffRes = await fetch("/api/aura8/veriff/create-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: crypto.randomUUID() }),
+      });
+      const veriffData = await veriffRes.json();
+      if (veriffData?.session_url) {
+        window.location.href = veriffData.session_url;
+        return;
+      }
+    } catch (e) {
+      console.error("Verification failed:", e);
+    }
+    setVerifying(false);
+    setAgeConfirmed(true);
+  };
+      });
     } catch (e) {
       console.error("Age verify log failed:", e);
     }
