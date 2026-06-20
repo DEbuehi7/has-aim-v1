@@ -1,0 +1,7 @@
+{
+  "searchCriteria": {
+    "query": "Los Angeles, CA",
+    "quicklists": ["absentee-owner", "high-equity"]
+  },
+  "options": { "skip": 0, "take": 25, "skipTrace": true }
+}
