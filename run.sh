@@ -1,0 +1,1 @@
+curl -s -X POST "https://api.batchdata.com/api/v1/property/search" \ -H "Authorization: Bearer OccrEGHsULhRmompR9ctlvWbRI8AS1khJLXGGhR" \ -H "Content-Type: application/json" \ -d @search.json \ -o response.json echo "---- first 2000 chars ----" head -c 2000 response.json echo ""
