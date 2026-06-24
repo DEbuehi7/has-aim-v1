@@ -1,11 +1,11 @@
 "use client";
-export const dynamic = "force-dynamic";
+import { Suspense } from "react";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 const CRUSHON_LINK = "https://crushon.ai/?ref=mtk1mdd&mist=1";
 
-export default function Aura8VerifyPage() {
+function VerifyContent() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
@@ -181,5 +181,24 @@ export default function Aura8VerifyPage() {
 
       </div>
     </div>
+  );
+}
+
+export default function Aura8VerifyPage() {
+  return (
+    <Suspense fallback={
+      <div style={{
+        minHeight: "100vh",
+        background: "#060608",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontFamily: "DM Mono, monospace",
+      }}>
+        <div style={{ fontSize: "10px", color: "#FF006E", letterSpacing: "0.2em" }}>AURA8...</div>
+      </div>
+    }>
+      <VerifyContent />
+    </Suspense>
   );
 }
