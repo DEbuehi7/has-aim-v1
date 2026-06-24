@@ -1,6 +1,7 @@
 "use client";
 export const dynamic = "force-dynamic";
 import { useState } from "react";
+import ContentGate from "../components/content-gate";
 
 const CRUSHON_LINK = "https://crushon.ai/?ref=mtk1mdd&mist=1";
 
@@ -21,10 +22,10 @@ const TIERS = [
 
 const COMPLIANCE = [
   { item: "CCBill payment processing application", status: "PENDING", priority: "CRITICAL" },
-  { item: "Age verification -- IP + timestamp logging", status: "ACTIVE", priority: "CRITICAL" },
+  { item: "Age verification -- email + self-attestation", status: "ACTIVE", priority: "CRITICAL" },
   { item: "2257 Records Custodian -- Daniel Osazee Ebuehi", status: "ACTIVE", priority: "CRITICAL" },
   { item: "DMCA Agent Registration (copyright.gov)", status: "DONE", priority: "HIGH" },
-  { item: "Veriff age verification -- live integration", status: "ACTIVE", priority: "HIGH" },
+  { item: "Email verification gate -- live integration", status: "ACTIVE", priority: "HIGH" },
   { item: "AWEmpire / AdultForce affiliate program", status: "PENDING", priority: "MEDIUM" },
   { item: "PornHub channel -- traffic funnel", status: "PENDING", priority: "MEDIUM" },
   { item: "Discreet billing descriptor -- SOLACE MEDIA", status: "PENDING", priority: "HIGH" },
@@ -36,88 +37,9 @@ const LENSES = [
   { id: "forge", label: "Forge", color: "#F59E0B", desc: "AI creator tools. Custom content generation. Token economy. Phase 2." },
 ];
 
-export default function Aura8Page() {
+function Aura8Content() {
   const [activeTab, setActiveTab] = useState("overview");
   const [activeLens, setActiveLens] = useState("discovery");
-  const [ageConfirmed, setAgeConfirmed] = useState(false);
-  const [verifying, setVerifying] = useState(false);
-  const [tosAccepted, setTosAccepted] = useState(false);
-
-  const handleAgeConfirm = async () => {
-    setVerifying(true);
-    try {
-      await fetch("/api/aura8/age-verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ timestamp: new Date().toISOString(), confirmed: true }),
-      });
-      const veriffRes = await fetch("/api/aura8/veriff/create-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: Math.random().toString(36).substring(2) + Date.now().toString(36) }),
-      });
-      const veriffData = await veriffRes.json();
-      if (veriffData?.session_url) {
-        console.log('Redirecting to:', veriffData.session_url);
-        window.open(veriffData.session_url, '_self');
-        return;
-      }
-    } catch (e) {
-      console.error("Verification failed:", e);
-    }
-    setVerifying(false);
-    setAgeConfirmed(true);
-  };
-
-  if (!ageConfirmed) {
-    return (
-      <div style={{ minHeight: "100vh", background: "#060608", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "DM Mono, monospace", padding: "24px" }}>
-        <div style={{ background: "#0D0D0F", border: "1px solid #FF006E40", borderRadius: "8px", padding: "40px", maxWidth: "420px", width: "100%", textAlign: "center" }}>
-          <div style={{ fontSize: "10px", color: "#FF006E", letterSpacing: "0.2em", marginBottom: "16px" }}>AURA8 -- DOSA PROTOCOL</div>
-          <div style={{ fontSize: "22px", fontWeight: 800, color: "#FFF", marginBottom: "12px" }}>Age Verification Required</div>
-          <div style={{ fontSize: "12px", color: "#666", lineHeight: 1.8, marginBottom: "16px" }}>
-            This platform contains adult content intended for users 18 years of age or older. By entering you confirm you are of legal age in your jurisdiction.
-          </div>
-          <div style={{ background: "#141416", border: "1px solid #252528", borderRadius: "4px", padding: "12px", marginBottom: "20px", fontSize: "10px", color: "#444", lineHeight: 1.6 }}>
-            Your IP address and confirmation timestamp are logged for compliance purposes per 18 U.S.C. 2257. Records Custodian: Daniel Osazee Ebuehi, 300 West Valley Blvd 3018, Alhambra CA 91803.
-          </div>
-          <div style={{ display: "flex", alignItems: "flex-start", gap: "10px", marginBottom: "16px", textAlign: "left" }}>
-            <input
-              type="checkbox"
-              id="tos"
-              checked={tosAccepted}
-              onChange={e => setTosAccepted(e.target.checked)}
-              style={{ marginTop: "2px", accentColor: "#FF006E", cursor: "pointer", flexShrink: 0 }}
-            />
-            <label htmlFor="tos" style={{ fontSize: "11px", color: "#71717A", lineHeight: 1.7, cursor: "pointer" }}>
-              I confirm I am 18 or older and agree to the{" "}
-              <a href="/aura8/terms" style={{ color: "#FF006E", textDecoration: "none" }}>Terms of Service</a>
-              {", "}
-              <a href="/aura8/privacy" style={{ color: "#FF006E", textDecoration: "none" }}>Privacy Policy</a>
-              {", and "}
-              <a href="/aura8/acceptable-use" style={{ color: "#FF006E", textDecoration: "none" }}>Acceptable Use Policy</a>
-            </label>
-          </div>
-          <button
-            onClick={handleAgeConfirm}
-            disabled={verifying || !tosAccepted}
-            style={{ background: tosAccepted ? "#FF006E" : "#333", border: "none", borderRadius: "4px", padding: "14px 32px", color: "#FFF", fontSize: "12px", fontWeight: 700, cursor: tosAccepted ? "pointer" : "not-allowed", fontFamily: "DM Mono, monospace", width: "100%", marginBottom: "10px", letterSpacing: "0.08em" }}
-          >
-            {verifying ? "VERIFYING..." : "I AM 18 OR OLDER -- ENTER"}
-          </button>
-          <button
-            onClick={() => window.location.href = "/dashboard"}
-            style={{ background: "transparent", border: "1px solid #252528", borderRadius: "4px", padding: "14px 32px", color: "#555", fontSize: "12px", cursor: "pointer", fontFamily: "DM Mono, monospace", width: "100%", letterSpacing: "0.08em" }}
-          >
-            EXIT
-          </button>
-          <div style={{ fontSize: "9px", color: "#333", marginTop: "16px" }}>
-            Identity verification powered by Veriff. Adults 18+ only.
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div style={{ minHeight: "100vh", background: "#060608", color: "#E8E8F0", fontFamily: "DM Mono, monospace" }}>
@@ -146,7 +68,7 @@ export default function Aura8Page() {
                 { label: "Target Demo", value: "Boomer" },
                 { label: "Revenue Streams", value: "6" },
                 { label: "Payment Rails", value: "3" },
-                { label: "Status", value: "PRE-LAUNCH" },
+                { label: "Status", value: "LIVE" },
               ].map(m => (
                 <div key={m.label} style={{ background: "#0D0D0F", border: "1px solid #1A1A2E", borderRadius: "6px", padding: "16px", textAlign: "center" }}>
                   <div style={{ fontSize: "9px", color: "#52525B", letterSpacing: "0.1em", marginBottom: "4px" }}>{m.label}</div>
@@ -236,5 +158,13 @@ export default function Aura8Page() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Aura8Page() {
+  return (
+    <ContentGate>
+      <Aura8Content />
+    </ContentGate>
   );
 }

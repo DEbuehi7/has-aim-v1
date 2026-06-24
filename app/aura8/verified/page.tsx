@@ -50,7 +50,7 @@ export default function Aura8Verified() {
           letterSpacing: "0.2em",
           marginBottom: "16px",
         }}>
-          AURA8 -- VERIFIED
+          AURA8 — VERIFIED
         </div>
         <div style={{
           fontSize: "20px",
@@ -58,7 +58,7 @@ export default function Aura8Verified() {
           color: "#FFF",
           marginBottom: "12px",
         }}>
-          Identity Confirmed
+          Email Confirmed
         </div>
         <div style={{
           fontSize: "13px",
@@ -119,8 +119,8 @@ export default function Aura8Verified() {
           marginTop: "24px",
           lineHeight: 1.6,
         }}>
-          Verified by Veriff. Your identity data is handled
-          per our Privacy Policy and deleted after verification.
+          Email verified. Adults 18+ only. AI-generated content.
+          Aura8 — Smiling Bubbles Inc.
         </div>
       </div>
     </div>
