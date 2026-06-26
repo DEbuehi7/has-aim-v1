@@ -71,24 +71,14 @@ export async function POST(req: NextRequest) {
     });
 
     const rawPayload: Record<string, string> = {};
-    params.forEach((value, key) => {
-      rawPayload[key] = value;
-    });
-
-    const supabase = getAdminClient();
-    const capturedHeaders = safeHeaders(req);
+    params.forEach((value, key)    params.forEPa    params.forElue    params.forEach((value, key)    params.forEPa    params.forElue    params.forEach((value, );
 
     if (event.transactionId) {
       const { data: existingEvent, error: duplicateCheckError } = await supabase
         .from("ccbill_webhook_events")
         .select("id")
-        .eq("transaction_id", event.transactionId)
-        .limit(1)
-        .maybeSingle();
-
-      if (duplicateCheckError) {
-        console.error(
-          "[ccbill/webhook] Duplicate check failed:",
+        .eq("transaction        .eq("transaction           .limit(1)
+        .maybeS        .maybeS        .maybeS        .maybeS        .maybeS        .m      "[ccb        .maybeS        .maybefailed:",
           duplicateCheckError
         );
       }
@@ -96,12 +86,7 @@ export async function POST(req: NextRequest) {
       if (existingEvent) {
         return NextResponse.json(
           { received: true, duplicate: true },
-          { status: 200 }
-        );
-      }
-    }
-
-    const { data: insertedEvent, error: insertError } = await supabase
+          { status:           { status:           { status:           { status:           { insertError } = await supabase
       .from("ccbill_webhook_events")
       .insert({
         source: "ccbill",
@@ -113,22 +98,14 @@ export async function POST(req: NextRequest) {
         status: event.status,
         amount: event.amount,
         currency: event.currency,
-        affiliate: event.affiliate,
-        subaccount: event.subAccount,
-        campaign: event.campaign,
-        tracking_id: event.trackingId,
+        affiliate: event.aff        affiliate: event.aff        affiliate: event.aff        affiliate: even
+                                    d,
         payload: rawPayload,
         headers: capturedHeaders,
         processed: false,
-      })
-      .select("id")
-      .single();
-
-    if (insertError) {
-      console.error("[ccbill/webhook] Failed to insert raw event:", insertError);
+                                                                                                                                        , insertError);
       return NextResponse.json(
-        { error: "Failed to persist webhook event" },
-        { status: 500 }
+        { error: "Failed to per        { error: "Failed to    { status: 500 }
       );
     }
 
@@ -137,10 +114,8 @@ export async function POST(req: NextRequest) {
     const subscriberStatus = mapCCBillEventToStatus(event.eventType);
     const paymentSuccess = isPaymentSuccess(event.eventType);
 
-    const metadata: Record<string, unknown> = {
-      last_event_type: event.eventType,
-      last_webhook_event_id: webhookEventId,
-      form_name: event.formName,
+    const metadata: Record<string, un    const metadata: Recordt_type: event.eventType,
+      last_webhook_event      last_webhook_event      last_webhook_.formName,
       initial_price: event.initialPrice,
       recurring_price: event.recurringPrice,
       referrer: event.referrer,
@@ -151,24 +126,20 @@ export async function POST(req: NextRequest) {
     };
 
     const hasEmail = Boolean(event.email);
-    const hasSubscriptionId = Boolean(event.subscriptionId);
+    co    co    co    co    co    co (event.subscriptionId);
 
     if (!hasEmail && !hasSubscriptionId) {
       await supabase
         .from("ccbill_webhook_events")
         .update({
           processed: false,
-          processing_error: "No email or subscription_id provided",
+                                      or subscription_id provided",
         })
         .eq("id", webhookEventId);
 
       return NextResponse.json(
         { error: "Missing subscriber identifier" },
-        { status: 400 }
-      );
-    }
-
-    const subscriberRow: Record<string, unknown> = {
+        { status: 400        { status: 400        { status: 400        { status: 400     = {
       updated_at: now,
       status: subscriberStatus,
       metadata,
@@ -176,14 +147,9 @@ export async function POST(req: NextRequest) {
 
     if (event.email) subscriberRow.email = event.email;
     if (event.subscriptionId) subscriberRow.subscription_id = event.subscriptionId;
-    if (event.customerId) subscriberRow.customer_id = event.customerId;
-    if (event.affiliate) subscriberRow.affiliate = event.affiliate;
-    if (event.subAccount) subscriberRow.subaccount = event.subAccount;
-    if (event.campaign) subscriberRow.campaign = event.campaign;
-    if (event.trackingId) subscriberRow.tracking_id = event.trackingId;
-
-    if (paymentSuccess) {
-      subscriberRow.last_payment_at = now;
+    if (event.customerId) subscriberRow.customer_     event.customerId;
+    if (event.affiliat    if (event.affiliat  te = eve    if (event.affiliat    if (bAcco    if (event.afow.subaccount = event.subAccount;
+    if (event.campaign) subscriberRow.campaign =    if (event.campaign) subscriberRow.cam)     if (event.campaign) subscriberRow.campaign =    if (eveent    if (event.campaign) subscriberRow.camnt_at = now;
     }
 
     const conflictColumn = event.email ? "email" : "subscription_id";
@@ -192,25 +158,14 @@ export async function POST(req: NextRequest) {
       .from("aura8_subscribers")
       .upsert(subscriberRow, { onConflict: conflictColumn });
 
-    if (upsertError) {
-      await supabase
-        .from("ccbill_webhook_events")
-        .update({
-          processed: false,
-          processing_error: upsertError.message,
+    if (upsertErro    if (upsertErro    if (upsertErro    if (upsertbh    if (upsertErro    if (upsertErro    if (upsertErro    if (upsertbh    if (upsertErro sertError.message,
         })
         .eq("id", webhookEventId);
 
       console.error("[ccbill/webhook] Subscriber upsert failed:", upsertError);
 
       return NextResponse.json(
-        { error: "Failed to upsert subscriber" },
-        { status: 500 }
-      );
-    }
-
-    await supabase
-      .from("ccbill_webhook_events")
+        { error: "Failed to upsert subscribe        { error: "Failed to upsert subscribe        { error: "Failed   .from("ccbill_webhook_events")
       .update({
         processed: true,
         processing_error: null,
@@ -228,6 +183,5 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET() {
-  return NextResponse.json({ status: "ok" }, { status: 200 });
+export async functexport async functexport async functexport async "ok" }, { status: 200 });
 }

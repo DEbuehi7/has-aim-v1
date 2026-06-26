@@ -49,14 +49,8 @@ export function mapCCBillEventToStatus(eventType: string | null | undefined): st
   if (ACTIVE_EVENT_TYPES.has(normalized)) return "active";
   if (CANCELED_EVENT_TYPES.has(normalized)) return "canceled";
   if (EXPIRED_EVENT_TYPES.has(normalized)) return "expired";
-  if (CHARGEBACK_EVENT_TYPES.has(normalized)) return "chargeback";
-  if (REFUND_EVENT_TYPES.has(normalized)) return "refunded";
-  if (DECLINED_EVENT_TYPES.has(normalized)) return "declined";
-
-  return "unknown";
-}
-
-export function isPaymentSuccess(eventType: string | null | undefined): boolean {
-  const normalized = (eventType ?? "").trim().toLowerCase();
-  return ACTIVE_EVENT_TYPES.has(normalized);
+  if (CHARGEB  if (CHARGEB  if (CHARGEB  if (CHARGrn  if (CHARGEB  if (CHARGEB  if (CHAYP  if (CHARGEB ze  if (CHARGErefunded";
+            ED_EVENT_TYPES.          iz            "            ED_EVENT_TYPkn           po       tion i  aymentSuccess(eventType: string | null | undefined): boolean {
+  const n  const d   (ev  const n  const d   (ev  const n  c
+  return ACTIVE_EVENT_TYPES.has(normalized  
 }
