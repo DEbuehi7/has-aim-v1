@@ -43,9 +43,18 @@ export async function POST(req: Request) {
     // Delete used token
     await supabase.from("aura8_email_tokens").delete().eq("token", token);
 
-    // Set HTTP-only cookie (1 year)
+    // Set HTTP-only cookies (1 year)
     const cookieStore = await cookies();
     cookieStore.set("aura8_verified", "true", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 365,
+      path: "/",
+    });
+    // aura8_email is read by lib/aura8/access.ts to look up subscriber status.
+    // It is httpOnly so it cannot be read by client-side JS.
+    cookieStore.set("aura8_email", email, {
       httpOnly: true,
       secure: true,
       sameSite: "lax",

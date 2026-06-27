@@ -1,9 +1,17 @@
-export type NormalizedCCBillEvent = {
+/**
+ * CCBill webhook payload normalizer.
+ *
+ * CCBill sends postbacks as application/x-www-form-urlencoded POST bodies.
+ * Field names vary across CCBill products and versions, so we check multiple
+ * known aliases for each logical field.
+ */
+
+export interface NormalizedCCBillEvent {
+  eventType: string | null;
   email: string | null;
   subscriptionId: string | null;
   transactionId: string | null;
   customerId: string | null;
-  eventType: string;
   amount: number | null;
   currency: string | null;
   initialPrice: number | null;
@@ -19,46 +27,129 @@ export type NormalizedCCBillEvent = {
   affiliate: string | null;
   subAccount: string | null;
   trackingId: string | null;
-};
+}
 
-function firstNonEmpty(
-  params: URLSearchParams,
-  keys: string[]
-): string | null {
+function pick(params: URLSearchParams, ...keys: string[]): string | null {
   for (const key of keys) {
-    const value = params.get(key);
-    if (value && value.trim() !== "") {
-      return value.trim();
-    }
+    const val = params.get(key);
+    if (val !== null && val.trim() !== "") return val.trim();
   }
   return null;
 }
 
-function parseNumber(value: string | null): number | null {
-  if (!value) return null;
-  const normalized = value.replace(/[^0-9.-]/g, "");
-  if   if   if   if   if   if   if   ift pa  if   if   if   if   if   if   irn Nu  if   if   if   if ) ?   if   if   if   if   if   normal  if   if   if   if   if   if ul  if   if   if   if   if   e ?? "unknown").trim().toLowerCase();
+function toFloat(raw: string | null): number | null {
+  if (raw === null) return null;
+  const n = parseFloat(raw.replace(/[^0-9.-]/g, ""));
+  return isNaN(n) ? null : n;
 }
 
 export function normalizeCCBillPayload(
-  params: URLSearchParams  params: URLSearchParams  pararing | null>
-): NormalizedCCB): NormalizedCCB): NorwardedFor = headers?.["x-forwarded-for"] ?? null;
-  const realIp = headers?.["x-real-ip"] ?? null;
+  params: URLSearchParams,
+  requestHeaders: Record<string, string | null>
+): NormalizedCCBillEvent {
+  const headerIp =
+    requestHeaders["x-forwarded-for"]?.split(",")[0]?.trim() ??
+    requestHeaders["x-real-ip"] ??
+    null;
+
+  const payloadIp = pick(params, "ipAddress", "ip_address", "clientIp", "client_ip");
 
   return {
-    email: firstNonEmpty(params, ["email", "customer_email"]),
-    subscriptionId: firstNonEmpty(params, [
+    eventType: pick(
+      params,
+      "eventType",
+      "event_type",
+      "transactionType",
+      "transaction_type",
+      "type"
+    ),
+    email: pick(params, "email", "customerEmail", "customer_email"),
+    subscriptionId: pick(
+      params,
       "subscriptionId",
       "subscription_id",
-      "subs      "subs   ,
-    ]),
-    transactionId: firstNonEmpty(params, [
+      "subscriptionID",
+      "subId",
+      "sub_id"
+    ),
+    transactionId: pick(
+      params,
       "transactionId",
       "transaction_id",
-      "trans      "trans      "trans      "tranonEmpty(params, ["customerId", "customer_id", "clientAccnum"      "trans      "trans      "trans      "tranonEmpty(pty(p      "trans      ", "event_type", "transactionType", "type"])
+      "transactionID",
+      "txnId",
+      "txn_id"
     ),
-    amount    amount    amount    amount    amount    amount    amount    amount    amount    amount    amount    amount    amount    amount    amount    amount    amount    amount    amount    amount    amount    amount    amount    amount   tNonE    amount    amount    amount    amouri    amount    amount    amount    amount    amount    amount Name", "    amount    amount    amount    amount    amount    amount    amount    amotNonEmpty(p    amount    amount    amount    amount   stamp: firstNonEmp    amount    amount    amount    amount    amount    amount No    amount    amount    amount    amount ])     amount    amount  lIp,
-    country: firstNonE    counams, ["country"]),
-    cofe    cofe    cofe    cofe    cofe    cofe "r    cofe    cofe    cgn    cofe    cofe   ams,     cofe    cofe    cofe    cofe    cofe    cofe "r    cofe    cofe    cgn    cofe    cofe   ams,     cofe    cofe    cofe    cofe    cofe    cofe "r    cofe    cofe    cgn    cofe    cofe   ams,     cofe    cofe    cofe    cofeki    c, "tracking_id", "utm_id"]),
+    customerId: pick(
+      params,
+      "customerId",
+      "customer_id",
+      "customerID",
+      "clientAccnum",
+      "client_accnum"
+    ),
+    amount: toFloat(
+      pick(params, "amount", "chargeAmount", "charge_amount", "price")
+    ),
+    currency: pick(params, "currency", "currencyCode", "currency_code"),
+    initialPrice: toFloat(
+      pick(params, "initialPrice", "initial_price", "initialAmount", "initial_amount")
+    ),
+    recurringPrice: toFloat(
+      pick(params, "recurringPrice", "recurring_price", "recurringAmount", "recurring_amount")
+    ),
+    formName: pick(params, "formName", "form_name", "flexId", "flex_id"),
+    status: pick(params, "status", "transactionStatus", "transaction_status"),
+    reason: pick(
+      params,
+      "reason",
+      "declineReason",
+      "decline_reason",
+      "failureReason",
+      "failure_reason",
+      "cancelReason",
+      "cancel_reason"
+    ),
+    timestamp: pick(
+      params,
+      "timestamp",
+      "transactionTime",
+      "transaction_time",
+      "eventTime",
+      "event_time",
+      "date"
+    ),
+    ipAddress: headerIp ?? payloadIp,
+    country: pick(params, "country", "customerCountry", "customer_country"),
+    referrer: pick(params, "referrer", "referral", "ref"),
+    campaign: pick(params, "campaign", "campaignId", "campaign_id"),
+    affiliate: pick(
+      params,
+      "affiliate",
+      "affiliateId",
+      "affiliate_id",
+      "aff",
+      "affId",
+      "aff_id"
+    ),
+    subAccount: pick(
+      params,
+      "subAccount",
+      "subaccount",
+      "sub_account",
+      "subAcc",
+      "sub_acc",
+      "clientSubacc",
+      "client_subacc"
+    ),
+    trackingId: pick(
+      params,
+      "trackingId",
+      "tracking_id",
+      "trackId",
+      "track_id",
+      "tid",
+      "utm_content"
+    ),
   };
 }
