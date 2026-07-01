@@ -1,74 +1,94 @@
-import { createAnthropic } from '@ai-sdk/anthropic';
-import { experimental_createMCPClient as createMCPClient } from '@ai-sdk/mcp';
-import { generateText } from 'ai';
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 export async function POST(request: NextRequest) {
   try {
     const { propertyId, address, city, state, zip } = await request.json();
 
-    const anthropic = createAnthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY!,
-    });
+    if (!address) {
+      return NextResponse.json(
+        { success: false, error: 'Missing address' },
+        { status: 400 }
+      );
+    }
 
-    const mcpClient = await createMCPClient({
-      transport: {
-        type: 'http',
-        url: 'https://mcp.batchdata.com',
-        headers: {
-          Authorization: `Bearer ${process.env.BATCHDATA_API_TOKEN}`,
-        },
+    if (!process.env.BATCHDATA_API_TOKEN) {
+      return NextResponse.json(
+        { success: false, error: 'Skip-trace service not configured' },
+        { status: 500 }
+      );
+    }
+
+    const batchRes = await fetch('https://api.batchdata.com/api/v3/property/skip-trace', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + process.env.BATCHDATA_API_TOKEN,
       },
+      body: JSON.stringify({
+        requests: [
+          {
+            propertyAddress: {
+              street: address,
+              city: city || 'Los Angeles',
+              state: state || 'CA',
+              zip: zip || '',
+            },
+          },
+        ],
+      }),
     });
 
-    const tools = await mcpClient.tools();
+    if (!batchRes.ok) {
+      return NextResponse.json(
+        { success: false, error: 'Skip-trace request failed' },
+        { status: batchRes.status }
+      );
+    }
 
-    const result = await generateText({
-      model: anthropic('claude-sonnet-4-20250514'),
-      system: `You are a real estate skip trace assistant. 
-When given a property address:
-1. Use skip_trace_property to find owner contact info
-2. Filter out any contacts with tcpa: true or dnc: true
-3. Return only reachable, compliant phone numbers
-4. Return your response as JSON only with this structure:
-{
-  "ownerName": "string",
-  "phone": "string",
-  "email": "string",
-  "tcpaCompliant": true,
-  "dncCompliant": true
-}`,
-      messages: [
-        {
-          role: 'user',
-          content: `Skip trace this property: ${address}, ${city}, ${state} ${zip}`
-        }
-      ],
-      tools,
-    });
+    const batchData = await batchRes.json();
+    const rawContacts =
+      batchData?.results?.[0]?.contacts ||
+      batchData?.results?.[0]?.skipTraces ||
+      [];
 
-    await mcpClient.close();
+    const contacts = Array.isArray(rawContacts) ? rawContacts : [];
+    const bestContact =
+      contacts.find((contact: any) => !contact?.tcpa && !contact?.dnc) ||
+      contacts[0] ||
+      null;
 
-    // Parse the response
-    let contactData = { ownerName: 'Unknown', phone: '', email: '', tcpaCompliant: true, dncCompliant: true };
-try {
-  const jsonMatch = result.text.match(/\{[\s\S]*\}/);
-  if (jsonMatch) {
-    contactData = JSON.parse(jsonMatch[0]);
-  }
-} catch (e) {
-  console.error('Parse error:', result.text);
-}
+    const phone =
+      bestContact?.phone ||
+      bestContact?.phone_number ||
+      bestContact?.phones?.[0]?.number ||
+      '';
 
+    const email =
+      bestContact?.email ||
+      bestContact?.emails?.[0]?.email ||
+      bestContact?.emails?.[0] ||
+      '';
 
-    // Update has_properties with real owner data
-    if (propertyId && contactData.phone) {
+    const contactData = {
+      ownerName: bestContact?.name || batchData?.results?.[0]?.ownerName || 'Unknown',
+      phone,
+      email,
+      tcpaCompliant: bestContact ? !bestContact.tcpa : true,
+      dncCompliant: bestContact ? !bestContact.dnc : true,
+    };
+
+    if (
+      propertyId &&
+      contactData.phone &&
+      process.env.NEXT_PUBLIC_SUPABASE_URL &&
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    ) {
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+      );
+
       await supabase
         .from('has_properties')
         .update({
@@ -77,20 +97,18 @@ try {
         })
         .eq('id', propertyId);
 
-      // Log to compliance
       await supabase.from('has_compliance_log').insert({
         content_id: String(propertyId),
         content_type: 'skip_trace',
         human_reviewed: true,
         review_date: new Date().toISOString(),
         approved: true,
-        reviewer: 'BatchData MCP + Claude · TCPA compliant',
+        reviewer: 'BatchData · TCPA compliant',
         notes: `Skip trace: ${contactData.ownerName} · ${contactData.phone} · TCPA: ${contactData.tcpaCompliant} · DNC: ${contactData.dncCompliant}`,
       });
     }
 
     return NextResponse.json({ success: true, data: contactData });
-
   } catch (error: any) {
     console.error('Skip trace error:', error);
     return NextResponse.json(
