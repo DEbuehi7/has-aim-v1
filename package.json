@@ -1,1 +1,25 @@
-{"name":"has-aim-v1","version":"0.1.0","private":true,"scripts":{"dev":"next dev","build":"next build","start":"next start","lint":"eslint"},"dependencies":{"@ai-sdk/anthropic":"^3.0.74","@ai-sdk/m":"^0.1.22","@hookform/resolvers":"^3.4.0","@radix-ui/react-dialog":"^1.1.1","@radix-ui/react-dropdown-menu":"^2.1.1","@radix-ui/react-popover":"^1.1.1","@radix-ui/react-select":"^2.0.0","@radix-ui/react-slot":"^2.0.2","@radix-ui/react-tabs":"^1.0.4","@supabase/supabase-js":"^2.44.2","ai":"^3.1.30","bcryptjs":"^2.4.3","class-variance-authority":"^0.7.0","clsx":"^2.1.1","cmdk":"^0.2.0","date-fns":"^3.3.1","framer-motion":"^10.16.4","lucide-react":"^0.344.0","next":"16.2.3","next-auth":"^5.0.0","react":"^19.0.0-rc-66048af9-20240925","react-dom":"^19.0.0-rc-66048af9-20240925","react-hook-form":"^7.52.0","react-hot-toast":"^2.4.1","recharts":"^2.10.3","tailwind-merge":"^2.3.0","tailwindcss-animate":"^1.0.7","zod":"^3.23.5"},"devDependencies":{"@eslint/js":"^9.0.0","@types/node":"^20","@types/react":"^19","@types/react-dom":"^19","eslint":"^9","eslint-config-next":"16.2.3","typescript":"^5","typescript-eslint":"^7.0.0"},"workspaces":["packages/*"]}
+{
+  "name": "has-aim-v1",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "16.2.6",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "@supabase/supabase-js": "^2.44.2",
+    "tailwindcss": "^4.1.11",
+    "@tailwindcss/postcss": "^4.1.11",
+    "bcryptjs": "^2.4.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2",
+    "@types/node": "^20.19.23",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2"
+  }
+}
