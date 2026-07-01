@@ -37,61 +37,18 @@ export default function ComplianceLogin() {
   }
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#060608",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontFamily: "DM Mono, monospace",
-        padding: "24px",
-      }}
-    >
-      <div
-        style={{
-          background: "#0D0D0F",
-          border: "1px solid #FF006E40",
-          borderRadius: "8px",
-          padding: "40px",
-          maxWidth: "420px",
-          width: "100%",
-        }}
-      >
-        <div
-          style={{
-            fontSize: "10px",
-            color: "#FF006E",
-            letterSpacing: "0.2em",
-            marginBottom: "24px",
-            textTransform: "uppercase",
-          }}
-        >
+    <div className="flex min-h-screen items-center justify-center bg-[#060608] p-6 font-mono">
+      <div className="w-full max-w-[420px] rounded-lg border border-[#FF006E40] bg-[#0D0D0F] p-10">
+        <div className="mb-6 text-[10px] uppercase tracking-[0.2em] text-[#FF006E]">
           AURA8 — COMPLIANCE ACCESS
         </div>
 
-        <div
-          style={{
-            fontSize: "20px",
-            fontWeight: 800,
-            color: "#FFF",
-            marginBottom: "32px",
-          }}
-        >
+        <div className="mb-8 text-xl font-extrabold text-white">
           Compliance Review Login
         </div>
 
         {error && (
-          <div
-            style={{
-              background: "#EF444430",
-              color: "#EF4444",
-              padding: "12px",
-              borderRadius: "6px",
-              marginBottom: "16px",
-              fontSize: "13px",
-            }}
-          >
+          <div className="mb-4 rounded-md bg-[#EF444430] p-3 text-[13px] text-[#EF4444]">
             {error}
           </div>
         )}
@@ -101,20 +58,9 @@ export default function ComplianceLogin() {
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          onKeyPress={(e) => e.key === "Enter" && !loading && handleLogin()}
+          onKeyDown={(e) => e.key === "Enter" && !loading && handleLogin()}
           disabled={loading}
-          style={{
-            width: "100%",
-            padding: "12px",
-            background: "#1A1A1D",
-            border: "1px solid #3F3F46",
-            borderRadius: "6px",
-            color: "#FFF",
-            marginBottom: "12px",
-            fontFamily: "DM Mono, monospace",
-            fontSize: "14px",
-            opacity: loading ? 0.6 : 1,
-          }}
+          className="mb-3 w-full rounded-md border border-[#3F3F46] bg-[#1A1A1D] p-3 text-sm text-white opacity-100 outline-none disabled:opacity-60"
         />
 
         <input
@@ -122,51 +68,20 @@ export default function ComplianceLogin() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          onKeyPress={(e) => e.key === "Enter" && !loading && handleLogin()}
+          onKeyDown={(e) => e.key === "Enter" && !loading && handleLogin()}
           disabled={loading}
-          style={{
-            width: "100%",
-            padding: "12px",
-            background: "#1A1A1D",
-            border: "1px solid #3F3F46",
-            borderRadius: "6px",
-            color: "#FFF",
-            marginBottom: "24px",
-            fontFamily: "DM Mono, monospace",
-            fontSize: "14px",
-            opacity: loading ? 0.6 : 1,
-          }}
+          className="mb-6 w-full rounded-md border border-[#3F3F46] bg-[#1A1A1D] p-3 text-sm text-white opacity-100 outline-none disabled:opacity-60"
         />
 
         <button
           onClick={handleLogin}
           disabled={loading || !username || !password}
-          style={{
-            width: "100%",
-            padding: "12px",
-            background: loading || !username || !password ? "#FF006E60" : "#FF006E",
-            border: "none",
-            borderRadius: "6px",
-            color: "#FFF",
-            fontSize: "13px",
-            fontWeight: 700,
-            cursor: loading || !username || !password ? "default" : "pointer",
-            transition: "background 0.2s",
-            fontFamily: "DM Mono, monospace",
-          }}
+          className="w-full rounded-md bg-[#FF006E] p-3 text-[13px] font-bold text-white transition-colors disabled:cursor-default disabled:bg-[#FF006E60]"
         >
           {loading ? "Authenticating..." : "Access Compliance Dashboard"}
         </button>
 
-        <div
-          style={{
-            fontSize: "10px",
-            color: "#52525B",
-            marginTop: "24px",
-            textAlign: "center",
-            lineHeight: 1.6,
-          }}
-        >
+        <div className="mt-6 text-center text-[10px] leading-relaxed text-[#52525B]">
           Authorized Visa/Mastercard compliance personnel only.
           <br />
           Unauthorized access is prohibited.
