@@ -44,8 +44,13 @@ export async function POST(req: Request) {
       .from("aura8_subscribers")
       .upsert([{ email: normalizedEmail, age_verified: false }], { onConflict: "email", ignoreDuplicates: true });
 
-    // Build verification URL - use has-aim-v1.vercel.app as the base URL
+    // HARDCODED: Always use has-aim-v1.vercel.app (production deployment)
     const verifyUrl = `https://has-aim-v1.vercel.app/aura8/verify?token=${token}`;
+    
+    // DEBUG: Log what we're sending
+    console.log("📧 SENDING EMAIL TO:", normalizedEmail);
+    console.log("🔗 VERIFICATION URL:", verifyUrl);
+    console.log("⏰ EXPIRY:", expiryMinutes, "minutes");
 
     // Send email via SendGrid
     const sgRes = await fetch("https://api.sendgrid.com/v3/mail/send", {
@@ -102,6 +107,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Failed to send verification email" }, { status: 502 });
     }
 
+    console.log("✅ EMAIL SENT SUCCESSFULLY");
     return NextResponse.json({ success: true, message: "Verification email sent" });
   } catch (e) {
     console.error("send-verification-email error:", e);
