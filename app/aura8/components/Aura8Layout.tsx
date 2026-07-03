@@ -13,7 +13,7 @@ function handleLogout() {
   fetch("/api/aura8/auth/logout", { method: "POST", credentials: "include" })
     .catch(() => {})
     .finally(() => {
-      window.location.href = "/aura8";
+      window.location.href = "/aura8/verify";
     });
 }
 
