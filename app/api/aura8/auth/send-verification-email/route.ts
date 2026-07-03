@@ -44,8 +44,8 @@ export async function POST(req: Request) {
       .from("aura8_subscribers")
       .upsert([{ email: normalizedEmail, age_verified: false }], { onConflict: "email", ignoreDuplicates: true });
 
-    // Build verification URL
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://aura8.fun";
+    // Build verification URL - use NEXT_PUBLIC_SITE_URL explicitly
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://has-aim-v1.vercel.app";
     const verifyUrl = `${baseUrl}/aura8/verify?token=${token}`;
 
     // Send email via SendGrid
