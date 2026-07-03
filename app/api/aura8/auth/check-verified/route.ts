@@ -6,8 +6,9 @@ export async function GET() {
   try {
     const cookieStore = await cookies();
     const verified = cookieStore.get("aura8_verified")?.value === "true";
-    return NextResponse.json({ verified });
+    const email = cookieStore.get("aura8_email")?.value ?? null;
+    return NextResponse.json({ verified, email });
   } catch (e) {
-    return NextResponse.json({ verified: false });
+    return NextResponse.json({ verified: false, email: null });
   }
 }
