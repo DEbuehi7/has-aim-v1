@@ -71,27 +71,51 @@ export async function POST(req: Request) {
 <html>
 <head><meta charset="utf-8"></head>
 <body style="background:#060608;color:#E8E8F0;font-family:monospace;padding:40px 24px;margin:0;">
-  <div style="max-width:480px;margin:0 auto;background:#0D0D0F;border:1px solid #FF006E40;border-radius:8px;padding:40px;">
-    <div style="font-size:10px;color:#FF006E;letter-spacing:0.2em;margin-bottom:16px;">AURA8 — EMAIL VERIFICATION</div>
-    <h1 style="font-size:20px;font-weight:800;color:#FFF;margin:0 0 16px;">Confirm your email</h1>
-    <p style="font-size:13px;color:#9A9A9F;line-height:1.8;margin:0 0 8px;">
-      Click the button below to verify your email address and access Aura8.
-      This link expires in ${expiryMinutes} minutes.
+  <div style="max-width:520px;margin:0 auto;background:#0D0D0F;border:1px solid #FF006E40;border-radius:8px;padding:40px;">
+    
+    <!-- Header -->
+    <div style="font-size:10px;color:#FF006E;letter-spacing:0.2em;margin-bottom:24px;">AURA8 — EMAIL VERIFICATION</div>
+    
+    <!-- Title -->
+    <h1 style="font-size:22px;font-weight:800;color:#FFF;margin:0 0 20px;">Confirm your email</h1>
+    
+    <!-- Intro -->
+    <p style="font-size:13px;color:#9A9A9F;line-height:1.8;margin:0 0 28px;">
+      Click the link below to verify your email address and access Aura8.
+      This link expires in <strong style="color:#FF006E;">${expiryMinutes} minutes</strong>.
     </p>
-    <p style="font-size:11px;color:#71717A;line-height:1.7;margin:0 0 28px;">
-      <strong style="color:#FF006E;">Disclosure:</strong> This site contains AI-generated adult content intended for users 18 years of age or older.
-    </p>
-    <a href="${verifyUrl}" style="display:block;background:#FF006E;border-radius:6px;padding:14px 24px;color:#FFF;font-size:13px;font-weight:700;text-decoration:none;letter-spacing:0.08em;text-align:center;margin-bottom:24px;">
-      VERIFY MY EMAIL
+    
+    <!-- HUGE CLICKABLE LINK -->
+    <a href="${verifyUrl}" style="display:block;background:#FF006E;border-radius:8px;padding:20px 24px;color:#000;font-size:14px;font-weight:700;text-decoration:none;letter-spacing:0.05em;text-align:center;margin-bottom:32px;word-break:break-all;line-height:1.6;">
+      ${verifyUrl}
     </a>
-    <p style="font-size:11px;color:#52525B;margin:0 0 8px;">
-      Or copy and paste this link into your browser:
+    
+    <!-- Instructions -->
+    <div style="background:#18181B;border:1px solid #3F3F46;border-radius:6px;padding:16px;margin-bottom:28px;">
+      <p style="font-size:11px;color:#A1A1A6;margin:0 0 12px;">
+        <strong style="color:#FFF;">Can't click the link?</strong>
+      </p>
+      <p style="font-size:11px;color:#A1A1A6;margin:0 0 8px;">
+        Copy and paste this URL into your browser address bar:
+      </p>
+      <p style="font-size:10px;color:#71717A;word-break:break-all;margin:0;font-family:'Courier New',monospace;background:#0D0D0F;padding:12px;border-radius:4px;">
+        ${verifyUrl}
+      </p>
+    </div>
+    
+    <!-- Disclosure -->
+    <p style="font-size:11px;color:#71717A;line-height:1.7;margin:0 0 24px;">
+      <strong style="color:#FF006E;">⚠ Disclosure:</strong> This site contains AI-generated adult content intended for users 18 years of age or older.
     </p>
-    <p style="font-size:10px;color:#3F3F46;word-break:break-all;margin:0 0 24px;">${verifyUrl}</p>
-    <p style="font-size:10px;color:#3F3F46;margin:0;">
-      If you did not request this, you can safely ignore this email.
-      Aura8 — Smiling Bubbles Inc. — Adults 18+ only.
+    
+    <!-- Footer -->
+    <p style="font-size:10px;color:#3F3F46;margin:0;border-top:1px solid #27272A;padding-top:16px;">
+      If you did not request this verification, you can safely ignore this email.
     </p>
+    <p style="font-size:10px;color:#3F3F46;margin:8px 0 0;">
+      Aura8 — Smiling Bubbles Inc. — Adults 18+ only
+    </p>
+    
   </div>
 </body>
 </html>
