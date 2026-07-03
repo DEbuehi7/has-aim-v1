@@ -1,7 +1,7 @@
 'use client';
 export const dynamic = 'force-dynamic';
-import { useEffect, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { useEffect, useMemo, useState } from 'react';
+import { createBrowserSupabaseClient } from '@/lib/supabase/browser-safe';
 
 type Lead = {
   id: number;
@@ -43,10 +43,7 @@ function fmt(n: number) {
 }
 
 export default function Dashboard() {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+  const supabase = useMemo(() => createBrowserSupabaseClient(), []);
 
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
@@ -55,6 +52,8 @@ export default function Dashboard() {
   const [tracingId, setTracingId] = useState<number | null>(null);
 
   useEffect(() => {
+    if (!supabase) return;
+
     async function load() {
       const { data } = await supabase
         .from('has_properties')
@@ -65,7 +64,7 @@ export default function Dashboard() {
       setLoading(false);
     }
     load();
-  }, []);
+  }, [supabase]);
 
   async function skipTrace(lead: Lead) {
     setTracingId(lead.id);

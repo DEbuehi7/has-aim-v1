@@ -1,6 +1,6 @@
 'use client';export const dynamic = 'force-dynamic';
-import { useEffect, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { useEffect, useMemo, useState } from 'react';
+import { createBrowserSupabaseClient } from '@/lib/supabase/browser-safe';
 
 type Lead = {
 id: number;
@@ -33,10 +33,7 @@ return '$' + n;
 }
 
 export default function FieldPage() {
-const supabase = createClient(
-process.env.NEXT_PUBLIC_SUPABASE_URL!,
-process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+const supabase = useMemo(() => createBrowserSupabaseClient(), []);
 const [leads, setLeads] = useState<Lead[]>([]);
 const [loading, setLoading] = useState(true);
 const [selected, setSelected] = useState<Lead | null>(null);
@@ -45,15 +42,17 @@ const [saving, setSaving] = useState(false);
 const [saved, setSaved] = useState(false);
 
 useEffect(() => {
+if (!supabase) return;
 supabase
 .from('has_properties')
 .select('id,address,zip,units,dsa_score,status,rent_control,tax_delinquent,active_violation,deferred_maint,arv_estimate,assignment_fee,phone')
 .gte('dsa_score', 75)
 .order('dsa_score', { ascending: false })
 .then(({ data }) => { setLeads(data || []); setLoading(false); });
-}, []);
+}, [supabase]);
 
 async function logVisit() {
+if (!supabase) return;
 if (!selected || !note.trim()) return;
 setSaving(true);
 await supabase.from('has_compliance_log').insert({
