@@ -81,26 +81,28 @@ export async function POST(req: Request) {
     
     <!-- Intro -->
     <p style="font-size:13px;color:#9A9A9F;line-height:1.8;margin:0 0 28px;">
-      Click the link below to verify your email address and access Aura8.
+      Copy and paste the link below into your browser to verify your email and access Aura8.
       This link expires in <strong style="color:#FF006E;">${expiryMinutes} minutes</strong>.
     </p>
     
-    <!-- HUGE CLICKABLE LINK -->
-    <a href="${verifyUrl}" style="display:block;background:#FF006E;border-radius:8px;padding:20px 24px;color:#000;font-size:14px;font-weight:700;text-decoration:none;letter-spacing:0.05em;text-align:center;margin-bottom:32px;word-break:break-all;line-height:1.6;">
-      ${verifyUrl}
-    </a>
+    <!-- HUGE TEXT LINK (NO <a> TAG) -->
+    <div style="background:#FF006E;border-radius:8px;padding:20px 24px;margin-bottom:32px;word-break:break-all;line-height:1.6;">
+      <div style="color:#000;font-size:14px;font-weight:700;letter-spacing:0.05em;">
+        ${verifyUrl}
+      </div>
+    </div>
     
     <!-- Instructions -->
     <div style="background:#18181B;border:1px solid #3F3F46;border-radius:6px;padding:16px;margin-bottom:28px;">
       <p style="font-size:11px;color:#A1A1A6;margin:0 0 12px;">
-        <strong style="color:#FFF;">Can't click the link?</strong>
+        <strong style="color:#FFF;">How to verify:</strong>
       </p>
-      <p style="font-size:11px;color:#A1A1A6;margin:0 0 8px;">
-        Copy and paste this URL into your browser address bar:
-      </p>
-      <p style="font-size:10px;color:#71717A;word-break:break-all;margin:0;font-family:'Courier New',monospace;background:#0D0D0F;padding:12px;border-radius:4px;">
-        ${verifyUrl}
-      </p>
+      <ol style="font-size:11px;color:#A1A1A6;margin:0;padding-left:20px;line-height:1.8;">
+        <li>Triple-click to select the entire URL above</li>
+        <li>Press Ctrl+C (or Cmd+C on Mac) to copy</li>
+        <li>Paste it into your browser address bar</li>
+        <li>Press Enter</li>
+      </ol>
     </div>
     
     <!-- Disclosure -->
