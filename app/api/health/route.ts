@@ -13,6 +13,23 @@ type DatabaseCheck = {
 
 const DATABASE_CHECK_TARGET = "aura8_subscribers";
 
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  if (
+    error &&
+    typeof error === "object" &&
+    "message" in error &&
+    typeof error.message === "string"
+  ) {
+    return error.message;
+  }
+
+  return String(error);
+}
+
 async function checkDatabaseConnection(): Promise<DatabaseCheck> {
   const checkedAt = new Date().toISOString();
 
@@ -49,7 +66,7 @@ async function checkDatabaseConnection(): Promise<DatabaseCheck> {
       status: "error",
       checkedAt,
       target: DATABASE_CHECK_TARGET,
-      message: error instanceof Error ? error.message : String(error),
+      message: getErrorMessage(error),
     };
   }
 }
