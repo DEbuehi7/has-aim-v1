@@ -52,6 +52,13 @@ export async function POST(req: Request) {
       maxAge: 60 * 60 * 24 * 365,
       path: "/",
     });
+    cookieStore.set("aura8_email", email, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 365,
+      path: "/",
+    });
 
     return NextResponse.json({ success: true, email });
   } catch (e) {
