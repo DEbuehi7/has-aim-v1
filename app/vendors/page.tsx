@@ -1,7 +1,7 @@
 'use client';
 export const dynamic = 'force-dynamic';
-import { useEffect, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { useEffect, useMemo, useState } from 'react';
+import { createBrowserSupabaseClient } from '@/lib/supabase/browser-safe';
 
 type Vendor = {
 id: number;
@@ -38,21 +38,20 @@ return '#F4A261';
 const STATUSES = ['ACTIVE', 'PENDING', 'IDENTIFIED', 'INACTIVE'];
 
 export default function VendorsPage() {
-const supabase = createClient(
-process.env.NEXT_PUBLIC_SUPABASE_URL!,
-process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+const supabase = useMemo(() => createBrowserSupabaseClient(), []);
 const [vendors, setVendors] = useState<Vendor[]>([]);
 const [loading, setLoading] = useState(true);
 const [filter, setFilter] = useState('ALL');
 const [selected, setSelected] = useState<Vendor | null>(null);
 
 useEffect(() => {
+if (!supabase) return;
 supabase.from('has_vendors').select('*').order('status', { ascending: true })
 .then(({ data }) => { setVendors(data || []); setLoading(false); });
-}, []);
+}, [supabase]);
 
 async function updateStatus(id: number, status: string) {
+if (!supabase) return;
 await supabase.from('has_vendors').update({ status }).eq('id', id);
 setVendors(prev => prev.map(v => v.id === id ? { ...v, status } : v));
 if (selected?.id === id) setSelected(prev => prev ? { ...prev, status } : null);
