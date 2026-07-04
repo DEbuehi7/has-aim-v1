@@ -34,6 +34,14 @@ export interface UseConversationReturn {
   clearError:       () => void;
 }
 
+interface StreamChunk {
+  type: "delta" | "done" | "error";
+  text?: string;
+  fullText?: string;
+  error?: string;
+  tokenInfo?: TokenInfo;
+}
+
 function uid(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
@@ -124,17 +132,22 @@ export function useConversation(): UseConversationReturn {
           buf = lines.pop() ?? "";
           for (const line of lines) {
             if (!line.trim()) continue;
+            let c: StreamChunk;
             try {
-              const c = JSON.parse(line) as { type: string; text?: string; fullText?: string; error?: string };
-              if (c.type === "delta" && c.text) {
+              c = JSON.parse(line) as StreamChunk;
+            } catch {
+              continue;
+            }
+
+            if (c.type === "delta" && c.text) {
                 full += c.text;
                 setMessages(p => p.map(m => m.id === asstId ? { ...m, content: full } : m));
-              } else if (c.type === "done") {
-                full = c.fullText ?? full;
-              } else if (c.type === "error") {
-                throw new Error(c.error ?? "Stream error");
-              }
-            } catch { /* non-JSON partial */ }
+            } else if (c.type === "done") {
+              full = c.fullText ?? full;
+              if (c.tokenInfo) setTokenInfo(c.tokenInfo);
+            } else if (c.type === "error") {
+              throw new Error(c.error ?? "Stream error");
+            }
           }
         }
       }
@@ -154,4 +167,3 @@ export function useConversation(): UseConversationReturn {
   return { messages, tokenInfo, isLoading, isLoadingHistory, error,
     sendMessage, clearError: useCallback(() => setError(null), []) };
 }
-
