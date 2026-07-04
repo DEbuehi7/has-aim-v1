@@ -126,4 +126,3 @@ export default function CompanionPage() {
     </ContentGate>
   );
 }
-
