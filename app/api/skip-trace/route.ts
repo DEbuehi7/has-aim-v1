@@ -1,6 +1,3 @@
-import { createAnthropic } from '@ai-sdk/anthropic';
-import { experimental_createMCPClient as createMCPClient } from '@ai-sdk/mcp';
-import { generateText } from 'ai';
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
@@ -20,64 +17,69 @@ function getSupabaseClient() {
 export async function POST(request: NextRequest) {
   try {
     const { propertyId, address, city, state, zip } = await request.json();
-    const supabase = getSupabaseClient();
 
-    const anthropic = createAnthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY!,
-    });
+    // Check if BatchData API is configured
+    if (!process.env.BATCHDATA_API_TOKEN) {
+      return NextResponse.json(
+        { success: false, error: 'Skip-trace service not configured' },
+        { status: 500 }
+      );
+    }
 
-    const mcpClient = await createMCPClient({
-      transport: {
-        type: 'http',
-        url: 'https://mcp.batchdata.com',
-        headers: {
-          Authorization: `Bearer ${process.env.BATCHDATA_API_TOKEN}`,
-        },
+    // Call BatchData API directly
+    const batchRes = await fetch('https://api.batchdata.com/api/v3/property/skip-trace', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + process.env.BATCHDATA_API_TOKEN,
       },
+      body: JSON.stringify({
+        requests: [
+          {
+            propertyAddress: {
+              street: address,
+              city,
+              state,
+              zip,
+            },
+          },
+        ],
+      }),
     });
 
-    const tools = await mcpClient.tools();
+    if (!batchRes.ok) {
+      return NextResponse.json(
+        { success: false, error: 'Skip-trace API error' },
+        { status: 500 }
+      );
+    }
 
-    const result = await generateText({
-      model: anthropic('claude-sonnet-4-20250514'),
-      system: `You are a real estate skip trace assistant. 
-When given a property address:
-1. Use skip_trace_property to find owner contact info
-2. Filter out any contacts with tcpa: true or dnc: true
-3. Return only reachable, compliant phone numbers
-4. Return your response as JSON only with this structure:
-{
-  "ownerName": "string",
-  "phone": "string",
-  "email": "string",
-  "tcpaCompliant": true,
-  "dncCompliant": true
-}`,
-      messages: [
-        {
-          role: 'user',
-          content: `Skip trace this property: ${address}, ${city}, ${state} ${zip}`
-        }
-      ],
-      tools,
-    });
+    const batchData = await batchRes.json();
 
-    await mcpClient.close();
+    // Parse response
+    let contactData = {
+      ownerName: 'Unknown',
+      phone: '',
+      email: '',
+      tcpaCompliant: true,
+      dncCompliant: true,
+    };
 
-    // Parse the response
-    let contactData = { ownerName: 'Unknown', phone: '', email: '', tcpaCompliant: true, dncCompliant: true };
-try {
-  const jsonMatch = result.text.match(/\{[\s\S]*\}/);
-  if (jsonMatch) {
-    contactData = JSON.parse(jsonMatch[0]);
-  }
-} catch (e) {
-  console.error('Parse error:', result.text);
-}
+    if (batchData.results?.[0]) {
+      const result = batchData.results[0];
+      contactData = {
+        ownerName: result.ownerName || 'Unknown',
+        phone: result.phone || '',
+        email: result.email || '',
+        tcpaCompliant: !result.tcpa,
+        dncCompliant: !result.dnc,
+      };
+    }
 
-
-    // Update has_properties with real owner data
+    // Update property if we have data
     if (propertyId && contactData.phone) {
+      const supabase = getSupabaseClient();
+
       await supabase
         .from('has_properties')
         .update({
@@ -93,13 +95,12 @@ try {
         human_reviewed: true,
         review_date: new Date().toISOString(),
         approved: true,
-        reviewer: 'BatchData MCP + Claude · TCPA compliant',
+        reviewer: 'BatchData API · TCPA compliant',
         notes: `Skip trace: ${contactData.ownerName} · ${contactData.phone} · TCPA: ${contactData.tcpaCompliant} · DNC: ${contactData.dncCompliant}`,
       });
     }
 
     return NextResponse.json({ success: true, data: contactData });
-
   } catch (error: any) {
     console.error('Skip trace error:', error);
     return NextResponse.json(
