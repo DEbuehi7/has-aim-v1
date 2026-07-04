@@ -89,7 +89,7 @@ function GalleryContent() {
       <div className="mx-auto w-full max-w-7xl space-y-4">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">Aura8 Gallery</h1>
-          <Link href="/aura8" className="text-sm text-[#FF006E]">Back to Aura8</Link>
+          <Link href="/aura8/dashboard" className="text-sm text-[#FF006E] hover:text-[#FF1493] transition">← Back to Dashboard</Link>
         </div>
 
         <SearchFilterBar
