@@ -134,11 +134,14 @@ function extractEvent(payload: string) {
 export async function POST(request: NextRequest) {
   const cookieStore = await cookies();
   const verified = cookieStore.get("aura8_verified")?.value === "true";
-  const email = cookieStore.get("aura8_email")?.value?.toLowerCase().trim();
 
-  if (!verified || !email) {
-    return NextResponse.json({ error: "Email verification required" }, { status: 401 });
+  if (!verified) {
+    return NextResponse.json({ error: "Dashboard login required" }, { status: 401 });
   }
+
+  // Use email for personalized token tracking when available; fall back to an
+  // anonymous identifier so verified dashboard users can always chat.
+  const email = cookieStore.get("aura8_email")?.value?.toLowerCase().trim() || "guest@aura8.local";
 
   let payload: { message?: unknown; history?: unknown };
 

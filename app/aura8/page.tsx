@@ -1,150 +1,104 @@
 "use client";
 export const dynamic = "force-dynamic";
-import { useState } from "react";
+
+import Link from "next/link";
 import ContentGate from "../components/content-gate";
 
-const CRUSHON_LINK = "https://crushon.ai/?ref=mtk1mdd&mist=1";
-
-const REVENUE_STREAMS = [
-  { id: "subscription", label: "Subscriptions", status: "BUILDING", color: "#FF006E", desc: "Pro $7.99/mo. Solace8 $9.99/mo. Boomer-first design. Discreet billing." },
-  { id: "affiliate", label: "Affiliate Commissions", status: "ACTIVE", color: "#FF5BB5", desc: "CrushOn AI -- 30% recurring commission. Live now." },
-  { id: "ad", label: "Ad Network RPM", status: "PLANNED", color: "#C77DFF", desc: "ExoClick / JuicyAds. Premium Boomer CPM $8-25." },
-  { id: "token", label: "Token Economy", status: "PLANNED", color: "#F59E0B", desc: "100 tokens $9.99. 500 tokens $39.99. Premium unlocks." },
-  { id: "whitelabel", label: "White Label Platform", status: "PLANNED", color: "#00B4D8", desc: "License Aura8 stack to operators. $2K-10K/mo per operator." },
-  { id: "data", label: "Anonymized Insights", status: "PLANNED", color: "#22C55E", desc: "Aggregated Boomer demographic data. CCPA compliant." },
+const LINKS = [
+  {
+    href: "/aura8/gallery",
+    label: "Gallery",
+    desc: "Explore AI-generated content curated for your preferences.",
+    accent: "#C77DFF",
+    status: "COMING SOON",
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+        <circle cx="8.5" cy="8.5" r="1.5" />
+        <polyline points="21 15 16 10 5 21" />
+      </svg>
+    ),
+  },
+  {
+    href: "/aura8/companion",
+    label: "AI Companion",
+    desc: "Start a private conversation with your Aura8 companion.",
+    accent: "#FF006E",
+    status: "AVAILABLE",
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+      </svg>
+    ),
+  },
+  {
+    href: "/aura8/dashboard",
+    label: "Dashboard",
+    desc: "Manage your profile, settings, and account.",
+    accent: "#00B4D8",
+    status: "AVAILABLE",
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="7" height="7" />
+        <rect x="14" y="3" width="7" height="7" />
+        <rect x="14" y="14" width="7" height="7" />
+        <rect x="3" y="14" width="7" height="7" />
+      </svg>
+    ),
+  },
 ];
 
-const TIERS = [
-  { id: "free", label: "Free", price: "$0", color: "#71717A", features: ["60-90 second previews", "Watermarked content", "Email capture only", "7-day Pro trial"] },
-  { id: "pro", label: "Pro", price: "$7.99", color: "#FF006E", features: ["Full videos", "No watermark", "Download access", "AI recommendations"] },
-  { id: "solace8", label: "Solace8", price: "$9.99", color: "#C77DFF", features: ["Everything in Pro", "CrushOn AI companion", "Personalized curation", "Discreet billing: SOLACE MEDIA"] },
-];
-
-const COMPLIANCE = [
-  { item: "CCBill payment processing application", status: "PENDING", priority: "CRITICAL" },
-  { item: "Age verification -- email + self-attestation", status: "ACTIVE", priority: "CRITICAL" },
-  { item: "2257 Records Custodian -- Daniel Osazee Ebuehi", status: "ACTIVE", priority: "CRITICAL" },
-  { item: "DMCA Agent Registration (copyright.gov)", status: "DONE", priority: "HIGH" },
-  { item: "Email verification gate -- live integration", status: "ACTIVE", priority: "HIGH" },
-  { item: "AWEmpire / AdultForce affiliate program", status: "PENDING", priority: "MEDIUM" },
-  { item: "PornHub channel -- traffic funnel", status: "PENDING", priority: "MEDIUM" },
-  { item: "Discreet billing descriptor -- SOLACE MEDIA", status: "PENDING", priority: "HIGH" },
-];
-
-const LENSES = [
-  { id: "discovery", label: "Discovery", color: "#FF006E", desc: "AI-curated content feed. Guardian scraper. Verified sources only. Free tier access." },
-  { id: "premium", label: "Premium", color: "#C77DFF", desc: "Full library. Pro + Solace8 tiers. CCBill-gated. Discreet billing." },
-  { id: "forge", label: "Forge", color: "#F59E0B", desc: "AI creator tools. Custom content generation. Token economy. Phase 2." },
-];
-
-function Aura8Content() {
-  const [activeTab, setActiveTab] = useState("overview");
-  const [activeLens, setActiveLens] = useState("discovery");
-
+function OverviewContent() {
   return (
     <div style={{ minHeight: "100vh", background: "#060608", color: "#E8E8F0", fontFamily: "DM Mono, monospace" }}>
-      <div style={{ background: "#0D0D0F", borderBottom: "1px solid #FF006E30", padding: "16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+      {/* Header */}
+      <div style={{ background: "#0D0D0F", borderBottom: "1px solid #FF006E30", padding: "16px 24px" }}>
         <div style={{ fontSize: "14px", fontWeight: 800, color: "#FF006E", letterSpacing: "0.1em" }}>AURA8</div>
-        <div style={{ display: "flex", gap: "8px" }}>
-          {["overview", "tiers", "lenses", "revenue", "compliance"].map(tab => (
-            <button key={tab} onClick={() => setActiveTab(tab)} style={{ background: activeTab === tab ? "#FF006E20" : "transparent", border: activeTab === tab ? "1px solid #FF006E" : "1px solid transparent", borderRadius: "4px", padding: "6px 12px", color: activeTab === tab ? "#FF006E" : "#71717A", fontSize: "10px", fontWeight: 700, cursor: "pointer", fontFamily: "DM Mono, monospace", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-              {tab}
-            </button>
-          ))}
-        </div>
       </div>
 
-      <div style={{ padding: "32px 24px", maxWidth: "900px", margin: "0 auto" }}>
-        {activeTab === "overview" && (
-          <div>
-            <div style={{ fontSize: "10px", color: "#FF006E", letterSpacing: "0.15em", marginBottom: "8px" }}>PLATFORM THESIS</div>
-            <p style={{ fontSize: "13px", color: "#9A9A9F", lineHeight: 1.8, marginBottom: "24px" }}>
-              Aura8 targets the underserved Boomer demographic (60-78) in the global adult content market ($100B+). Three core values: Privacy. Discretion. Cognitive and Emotional Utility. The loneliness economy drives willingness to pay -- AI companionship addresses a deeper need than content alone. Identity: Dosa. Domain: aura8.fun.
-            </p>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "12px", marginBottom: "24px" }}>
-              {[
-                { label: "Market Size", value: "$100B+" },
-                { label: "CAGR", value: "9.43%" },
-                { label: "Target Demo", value: "Boomer" },
-                { label: "Revenue Streams", value: "6" },
-                { label: "Payment Rails", value: "3" },
-                { label: "Status", value: "LIVE" },
-              ].map(m => (
-                <div key={m.label} style={{ background: "#0D0D0F", border: "1px solid #1A1A2E", borderRadius: "6px", padding: "16px", textAlign: "center" }}>
-                  <div style={{ fontSize: "9px", color: "#52525B", letterSpacing: "0.1em", marginBottom: "4px" }}>{m.label}</div>
-                  <div style={{ fontSize: "16px", fontWeight: 800, color: "#FF006E" }}>{m.value}</div>
+      <div style={{ padding: "48px 24px", maxWidth: "900px", margin: "0 auto" }}>
+        <div style={{ marginBottom: "40px" }}>
+          <div style={{ fontSize: "10px", color: "#FF006E", letterSpacing: "0.2em", marginBottom: "8px" }}>WELCOME</div>
+          <h1 style={{ fontSize: "clamp(24px, 5vw, 36px)", fontWeight: 900, color: "#FFF", margin: 0, marginBottom: "8px" }}>
+            Where would you like to go?
+          </h1>
+          <p style={{ fontSize: "13px", color: "#52525B", margin: 0 }}>
+            Choose from Gallery, AI Companion, or your Dashboard.
+          </p>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "16px" }}>
+          {LINKS.map(link => (
+            <Link key={link.href} href={link.href} style={{ textDecoration: "none" }}>
+              <div style={{
+                background: "#0D0D0F",
+                border: "1px solid #27272A",
+                borderRadius: "10px",
+                padding: "24px",
+                cursor: "pointer",
+                height: "100%",
+              }}>
+                <div style={{ color: link.accent, marginBottom: "14px" }}>{link.icon}</div>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
+                  <div style={{ fontSize: "14px", fontWeight: 700, color: "#E8E8F0" }}>{link.label}</div>
+                  <div style={{
+                    fontSize: "8px",
+                    fontWeight: 700,
+                    color: link.status === "AVAILABLE" ? "#10B981" : "#52525B",
+                    background: link.status === "AVAILABLE" ? "#10B98120" : "#1A1A2E",
+                    border: link.status === "AVAILABLE" ? "1px solid #10B98140" : "1px solid #27272A",
+                    borderRadius: "4px",
+                    padding: "2px 6px",
+                    letterSpacing: "0.05em",
+                  }}>
+                    {link.status}
+                  </div>
                 </div>
-              ))}
-            </div>
-            <div style={{ background: "#0D0D0F", border: "1px solid #FF006E20", borderRadius: "8px", padding: "20px", textAlign: "center" }}>
-              <div style={{ fontSize: "10px", color: "#FF006E", letterSpacing: "0.2em", marginBottom: "8px" }}>EXPLORE NOW -- AFFILIATE</div>
-              <p style={{ fontSize: "12px", color: "#71717A", marginBottom: "16px" }}>Experience AI companionship now through our CrushOn AI partnership. Private, intelligent, available immediately.</p>
-              <a href={CRUSHON_LINK} target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", border: "1px solid #FF006E", borderRadius: "4px", padding: "10px 24px", color: "#FF006E", fontSize: "11px", fontWeight: 700, textDecoration: "none", letterSpacing: "0.08em" }}>
-                EXPLORE CRUSHON AI
-              </a>
-              <p style={{ fontSize: "9px", color: "#3F3F46", marginTop: "8px" }}>Affiliate partnership. Aura8 earns 30% recurring commission.</p>
-            </div>
-          </div>
-        )}
-
-        {activeTab === "tiers" && (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "16px" }}>
-            {TIERS.map(t => (
-              <div key={t.id} style={{ background: "#0D0D0F", border: "1px solid " + t.color + "40", borderRadius: "8px", padding: "24px" }}>
-                <div style={{ fontSize: "10px", color: t.color, letterSpacing: "0.15em", marginBottom: "8px" }}>{t.label.toUpperCase()}</div>
-                <div style={{ fontSize: "28px", fontWeight: 900, color: t.color, marginBottom: "16px" }}>{t.price}</div>
-                {t.features.map(f => (
-                  <div key={f} style={{ fontSize: "11px", color: "#71717A", marginBottom: "6px", paddingLeft: "8px", borderLeft: "2px solid " + t.color + "40" }}>{f}</div>
-                ))}
+                <div style={{ fontSize: "12px", color: "#52525B", lineHeight: 1.6 }}>{link.desc}</div>
               </div>
-            ))}
-          </div>
-        )}
-
-        {activeTab === "lenses" && (
-          <div>
-            <div style={{ display: "flex", gap: "8px", marginBottom: "20px" }}>
-              {LENSES.map(l => (
-                <button key={l.id} onClick={() => setActiveLens(l.id)} style={{ background: activeLens === l.id ? l.color + "20" : "transparent", border: activeLens === l.id ? "1px solid " + l.color : "1px solid #1A1A2E", borderRadius: "4px", padding: "8px 16px", color: activeLens === l.id ? l.color : "#71717A", fontSize: "11px", fontWeight: 700, cursor: "pointer", fontFamily: "DM Mono, monospace" }}>
-                  {l.label.toUpperCase()}
-                </button>
-              ))}
-            </div>
-            {LENSES.filter(l => l.id === activeLens).map(l => (
-              <div key={l.id} style={{ background: "#0D0D0F", border: "1px solid " + l.color + "30", borderRadius: "8px", padding: "24px" }}>
-                <div style={{ fontSize: "13px", color: "#9A9A9F", lineHeight: 1.8 }}>{l.desc}</div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {activeTab === "revenue" && (
-          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            {REVENUE_STREAMS.map(r => (
-              <div key={r.id} style={{ background: "#0D0D0F", border: "1px solid #1A1A2E", borderRadius: "6px", padding: "16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div>
-                  <div style={{ fontSize: "12px", fontWeight: 700, color: "#FAFAFA", marginBottom: "4px" }}>{r.label}</div>
-                  <div style={{ fontSize: "11px", color: "#71717A" }}>{r.desc}</div>
-                </div>
-                <div style={{ background: r.color + "20", color: r.color, fontSize: "9px", fontWeight: 700, padding: "4px 8px", borderRadius: "4px", whiteSpace: "nowrap", marginLeft: "16px" }}>{r.status}</div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {activeTab === "compliance" && (
-          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            {COMPLIANCE.map((c, i) => (
-              <div key={i} style={{ background: "#0D0D0F", border: "1px solid #1A1A2E", borderRadius: "6px", padding: "16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div style={{ fontSize: "12px", color: "#9A9A9F" }}>{c.item}</div>
-                <div style={{ display: "flex", gap: "8px", flexShrink: 0, marginLeft: "16px" }}>
-                  <span style={{ fontSize: "9px", color: c.priority === "CRITICAL" ? "#EF4444" : c.priority === "HIGH" ? "#F59E0B" : "#71717A", fontWeight: 700 }}>{c.priority}</span>
-                  <span style={{ fontSize: "9px", color: c.status === "DONE" || c.status === "ACTIVE" ? "#10B981" : "#F59E0B", fontWeight: 700 }}>{c.status}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+            </Link>
+          ))}
+        </div>
       </div>
 
       <div style={{ background: "#0D0D0F", borderTop: "1px solid #1A1A2E", padding: "20px 24px", textAlign: "center" }}>
@@ -164,7 +118,7 @@ function Aura8Content() {
 export default function Aura8Page() {
   return (
     <ContentGate>
-      <Aura8Content />
+      <OverviewContent />
     </ContentGate>
   );
 }
