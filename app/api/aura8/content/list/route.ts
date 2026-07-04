@@ -4,7 +4,16 @@ import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { getAura8Session } from "@/lib/aura8/auth";
 
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+function getSupabaseClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (!url || !key) {
+    throw new Error("Missing Supabase credentials");
+  }
+  
+  return createClient(url, key);
+}
 
 function sanitizeSearchTerm(value: string) {
   return value.replace(/[,%()]/g, " ").replace(/\s+/g, " ").trim();
@@ -12,6 +21,7 @@ function sanitizeSearchTerm(value: string) {
 
 export async function GET(request: Request) {
   try {
+    const supabase = getSupabaseClient();
     const session = await getAura8Session();
     if (!session.verified) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
