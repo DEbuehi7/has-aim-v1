@@ -2,6 +2,7 @@
 export const dynamic = "force-dynamic";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 const CRUSHON_LINK = "https://crushon.ai/?ref=mtk1mdd&mist=1";
 const AWEMPIRE_LINK = "https://www.awempire.com/?siteid=D5064423";
@@ -106,6 +107,29 @@ export default function Aura8Landing() {
           letterSpacing: "0.1em",
         }}>
           {count} people on the waitlist
+        </div>
+
+        <div style={{
+          display: "flex",
+          justifyContent: "center",
+          marginBottom: "16px",
+        }}>
+          <Link
+            href="/aura8"
+            style={{
+              display: "inline-block",
+              border: "1px solid #FF006E",
+              borderRadius: "6px",
+              padding: "12px 24px",
+              color: "#FF006E",
+              fontSize: "12px",
+              fontWeight: 700,
+              textDecoration: "none",
+              letterSpacing: "0.08em",
+            }}
+          >
+            EXPLORE GALLERY + COMPANION
+          </Link>
         </div>
 
         {/* CrushOn CTA -- above fold, before email */}

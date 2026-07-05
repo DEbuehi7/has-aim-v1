@@ -46,7 +46,7 @@ function VerifyContent() {
       setCountdown(c => {
         if (c <= 1) {
           clearInterval(timer);
-          window.location.href = "/aura8";
+          window.location.href = "/aura8/dashboard";
           return 0;
         }
         return c - 1;
@@ -101,7 +101,7 @@ function VerifyContent() {
               Your age has been verified. Welcome to Aura8.
               You will be redirected in {countdown} seconds.
             </div>
-            <a href="/aura8" style={{
+            <a href="/aura8/dashboard" style={{
               display: "block",
               background: "#FF006E",
               border: "none",

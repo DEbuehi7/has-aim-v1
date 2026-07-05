@@ -1,13 +1,10 @@
 'use client';
 export const dynamic = 'force-dynamic';
-import { useEffect, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { useEffect, useMemo, useState } from 'react';
+import { createBrowserSupabaseClient } from '@/lib/supabase/browser-safe';
 
 export default function SettingsPage() {
-const supabase = createClient(
-process.env.NEXT_PUBLIC_SUPABASE_URL!,
-process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+const supabase = useMemo(() => createBrowserSupabaseClient(), []);
 const [stats, setStats] = useState({
 leads: 0, deals: 0, compliance: 0,
 vendors: 0, grants: 0, contacted: 0,
@@ -18,6 +15,7 @@ const [twilioStatus, setTwilioStatus] = useState('CHECKING...');
 const [supabaseStatus, setSupabaseStatus] = useState('CHECKING...');
 
 useEffect(() => {
+if (!supabase) return;
 async function load() {
 const [
 { count: leads },
@@ -49,7 +47,7 @@ setLoading(false);
 }
 load();
 setTwilioStatus('ACTIVE · 323-693-9076');
-}, []);
+}, [supabase]);
 
 const SYSTEM_CHECKS = [
 { label: 'Supabase ERM', value: supabaseStatus, color: '#2ECC71', detail: '17 tables · ktbulbreqyzimxvxlqvl' },
