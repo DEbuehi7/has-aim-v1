@@ -115,7 +115,7 @@ export default function Aura8Landing() {
           marginBottom: "16px",
         }}>
           <Link
-            href="/aura8/options"
+            href="/aura8"
             style={{
               display: "inline-block",
               border: "1px solid #FF006E",
