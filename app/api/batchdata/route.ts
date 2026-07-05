@@ -6,15 +6,16 @@ import { createClient } from "@supabase/supabase-js";
 
 
 
-const supabase = createClient(
-
-process.env.NEXT_PUBLIC_SUPABASE_URL,
-
-process.env.SUPABASE_SERVICE_ROLE_KEY
-
-);
-
-
+function getSupabaseClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (!url || !key) {
+    throw new Error("Missing Supabase credentials");
+  }
+  
+  return createClient(url, key);
+}
 
 const BATCHDATA_URL = "https://api.batchdata.com/api/v3";
 
@@ -26,104 +27,105 @@ const BATCHDATA_KEY = process.env.BATCHDATA_API_TOKEN;
 export async function POST(req) {
 
 try {
-
-const { contact_id, address } = await req.json();
-
-
-
-
-if (!contact_id || !address) {
-
-  return NextResponse.json({ error: "contact_id and address required" }, { status: 400 });
-
-}
+  const supabase = getSupabaseClient();
+  
+  const { contact_id, address } = await req.json();
 
 
 
-const bdRes = await fetch(BATCHDATA_URL + "/property/skip-trace", {
 
-  method: "POST",
+  if (!contact_id || !address) {
 
-  headers: {
+    return NextResponse.json({ error: "contact_id and address required" }, { status: 400 });
 
-    "Content-Type": "application/json",
-
-    "Authorization": "Bearer " + BATCHDATA_KEY,
-
-  },
-
-  body: JSON.stringify({
-
-    requests: [{ propertyAddress: { street: address, city: "Los Angeles", state: "CA" } }],
-
-  }),
-
-});
+  }
 
 
 
-const bdData = await bdRes.json();
+  const bdRes = await fetch(BATCHDATA_URL + "/property/skip-trace", {
+
+    method: "POST",
+
+    headers: {
+
+      "Content-Type": "application/json",
+
+      "Authorization": "Bearer " + BATCHDATA_KEY,
+
+    },
+
+    body: JSON.stringify({
+
+      requests: [{ propertyAddress: { street: address, city: "Los Angeles", state: "CA" } }],
+
+    }),
+
+  });
 
 
 
-if (!bdRes.ok) {
-
-  return NextResponse.json({ error: "BatchData error", detail: bdData }, { status: 502 });
-
-}
+  const bdData = await bdRes.json();
 
 
 
-const result = bdData?.result?.data?.[0];
-const person = result?.persons?.[0] ?? {};
-const phones = person?.phones ?? [];
-const emails = person?.emails ?? [];
-const ownerName = result?.property?.owners?.[0]?.name?.full ?? null;
+  if (!bdRes.ok) {
+
+    return NextResponse.json({ error: "BatchData error", detail: bdData }, { status: 502 });
+
+  }
 
 
 
-const updates = {
-  skip_traced: true,
-  batchdata_id: result?.property?.id ?? null,
-  phone_primary: phones[0]?.number ?? null,
-  phone_secondary: phones[1]?.number ?? null,
-  email: emails[0]?.email ?? null,
-  full_name: ownerName,
-  mailing_address: result?.property?.mailingAddress?.fullAddress ?? null,
-  phone_verified: phones[0]?.tested ?? false,
-  dnc: phones[0]?.dnc ?? false,
-  tcpa_compliant: phones[0]?.tcpa ?? false,
-  updated_at: new Date().toISOString(),
-};
+  const result = bdData?.result?.data?.[0];
+  const person = result?.persons?.[0] ?? {};
+  const phones = person?.phones ?? [];
+  const emails = person?.emails ?? [];
+  const ownerName = result?.property?.owners?.[0]?.name?.full ?? null;
 
 
 
-const { data, error } = await supabase
-
-  .from("has_contacts")
-
-  .update(updates)
-
-  .eq("id", contact_id)
-
-  .select()
-
-  .single();
-
-
-
-if (error) throw new Error(JSON.stringify(error));
+  const updates = {
+    skip_traced: true,
+    batchdata_id: result?.property?.id ?? null,
+    phone_primary: phones[0]?.number ?? null,
+    phone_secondary: phones[1]?.number ?? null,
+    email: emails[0]?.email ?? null,
+    full_name: ownerName,
+    mailing_address: result?.property?.mailingAddress?.fullAddress ?? null,
+    phone_verified: phones[0]?.tested ?? false,
+    dnc: phones[0]?.dnc ?? false,
+    tcpa_compliant: phones[0]?.tcpa ?? false,
+    updated_at: new Date().toISOString(),
+  };
 
 
 
-return NextResponse.json({ success: true, contact: data, raw: result });
+  const { data, error } = await supabase
+
+    .from("has_contacts")
+
+    .update(updates)
+
+    .eq("id", contact_id)
+
+    .select()
+
+    .single();
+
+
+
+  if (error) throw new Error(JSON.stringify(error));
+
+
+
+  return NextResponse.json({ success: true, contact: data, raw: result });
 
 
 
 
 } catch (e) {
 
-return NextResponse.json({ error: "Skip trace failed", detail: String(e) }, { status: 500 });
+  return NextResponse.json({ error: "Skip trace failed", detail: String(e) }, { status: 500 });
 
 }
 

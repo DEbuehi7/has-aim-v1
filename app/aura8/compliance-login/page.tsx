@@ -1,37 +1,40 @@
-"use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+'use client';
 
-export default function ComplianceLogin() {
+import { FormEvent, useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+export default function ComplianceLoginPage() {
   const router = useRouter();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  async function handleLogin() {
+  async function onSubmit(e: FormEvent) {
+    e.preventDefault();
+    setError(null);
     setLoading(true);
-    setError("");
 
     try {
-      const res = await fetch("/api/auth/compliance-login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/auth/compliance-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        const data = await res.json();
-        setError(data.error || "Login failed");
-        setLoading(false);
+        setError(data?.error || 'Login failed');
         return;
       }
 
-      const data = await res.json();
-      localStorage.setItem("compliance_session_token", data.session_token);
-      router.push("/aura8/compliance-review");
-    } catch (err) {
-      setError("An error occurred. Please try again.");
+      localStorage.setItem('compliance_session_token', data.session_token);
+      router.push('/aura8/compliance-review');
+      router.refresh();
+    } catch {
+      setError('Network error. Please try again.');
+    } finally {
       setLoading(false);
     }
   }
@@ -43,43 +46,41 @@ export default function ComplianceLogin() {
           AURA8 — COMPLIANCE ACCESS
         </div>
 
-        <div className="mb-8 text-xl font-extrabold text-white">
-          Compliance Review Login
-        </div>
+        <div className="mb-8 text-xl font-extrabold text-white">Compliance Review Login</div>
 
         {error && (
-          <div className="mb-4 rounded-md bg-[#EF444430] p-3 text-[13px] text-[#EF4444]">
-            {error}
-          </div>
+          <div className="mb-4 rounded-md bg-[#EF444430] p-3 text-[13px] text-[#EF4444]">{error}</div>
         )}
 
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && !loading && handleLogin()}
-          disabled={loading}
-          className="mb-3 w-full rounded-md border border-[#3F3F46] bg-[#1A1A1D] p-3 text-sm text-white opacity-100 outline-none disabled:opacity-60"
-        />
+        <form onSubmit={onSubmit}>
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+            disabled={loading}
+            className="mb-3 w-full rounded-md border border-[#3F3F46] bg-[#1A1A1D] p-3 text-sm text-white opacity-100 outline-none disabled:opacity-60"
+          />
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && !loading && handleLogin()}
-          disabled={loading}
-          className="mb-6 w-full rounded-md border border-[#3F3F46] bg-[#1A1A1D] p-3 text-sm text-white opacity-100 outline-none disabled:opacity-60"
-        />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            disabled={loading}
+            className="mb-6 w-full rounded-md border border-[#3F3F46] bg-[#1A1A1D] p-3 text-sm text-white opacity-100 outline-none disabled:opacity-60"
+          />
 
-        <button
-          onClick={handleLogin}
-          disabled={loading || !username || !password}
-          className="w-full rounded-md bg-[#FF006E] p-3 text-[13px] font-bold text-white transition-colors disabled:cursor-default disabled:bg-[#FF006E60]"
-        >
-          {loading ? "Authenticating..." : "Access Compliance Dashboard"}
-        </button>
+          <button
+            type="submit"
+            disabled={loading || !username || !password}
+            className="w-full rounded-md bg-[#FF006E] p-3 text-[13px] font-bold text-white transition-colors disabled:cursor-default disabled:bg-[#FF006E60]"
+          >
+            {loading ? 'Logging in...' : 'Access Compliance Dashboard'}
+          </button>
+        </form>
 
         <div className="mt-6 text-center text-[10px] leading-relaxed text-[#52525B]">
           Authorized Visa/Mastercard compliance personnel only.

@@ -1,105 +1,77 @@
 export const dynamic = "force-dynamic";
+export const preload = false;
 
 import { NextResponse } from "next/server";
 
 import { createClient } from "@supabase/supabase-js";
 
-
-
-const supabase = createClient(
-
-process.env.NEXT_PUBLIC_SUPABASE_URL,
-
-process.env.SUPABASE_SERVICE_ROLE_KEY
-
-);
-
-
+function getSupabaseClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (!url || !key) {
+    throw new Error("Missing Supabase credentials");
+  }
+  
+  return createClient(url, key);
+}
 
 export async function GET() {
+  try {
+    const supabase = getSupabaseClient();
+    const { data, error } = await supabase
+      .from("has_contacts")
+      .select("*")
+      .order("created_at", { ascending: false });
 
-try {
+    if (error) throw error;
 
-const { data, error } = await supabase
+    return NextResponse.json(data);
 
-.from("has_contacts")
-
-.select("*")
-
-.order("created_at", { ascending: false });
-
-if (error) throw error;
-
-return NextResponse.json(data);
-
-} catch (e) {
-
-return NextResponse.json({ error: "Failed to fetch contacts" }, { status: 500 });
-
+  } catch (e) {
+    return NextResponse.json({ error: "Failed to fetch contacts" }, { status: 500 });
+  }
 }
-
-}
-
-
 
 export async function POST(req) {
+  try {
+    const supabase = getSupabaseClient();
+    const body = await req.json();
 
-try {
+    const { data, error } = await supabase
+      .from("has_contacts")
+      .insert([body])
+      .select()
+      .single();
 
-const body = await req.json();
+    if (error) throw error;
 
-const { data, error } = await supabase
+    return NextResponse.json(data);
 
-.from("has_contacts")
-
-.insert([body])
-
-.select()
-
-.single();
-
-if (error) throw error;
-
-return NextResponse.json(data);
-
-} catch (e) {
-
-return NextResponse.json({ error: "Failed to create contact" }, { status: 500 });
-
+  } catch (e) {
+    return NextResponse.json({ error: "Failed to create contact" }, { status: 500 });
+  }
 }
-
-}
-
-
 
 export async function PATCH(req) {
+  try {
+    const supabase = getSupabaseClient();
+    const body = await req.json();
 
-try {
+    const { id, ...updates } = body;
 
-const body = await req.json();
+    const { data, error } = await supabase
+      .from("has_contacts")
+      .update({ ...updates, updated_at: new Date().toISOString() })
+      .eq("id", id)
+      .select()
+      .single();
 
-const { id, ...updates } = body;
+    if (error) throw error;
 
-const { data, error } = await supabase
+    return NextResponse.json(data);
 
-.from("has_contacts")
-
-.update({ ...updates, updated_at: new Date().toISOString() })
-
-.eq("id", id)
-
-.select()
-
-.single();
-
-if (error) throw error;
-
-return NextResponse.json(data);
-
-} catch (e) {
-
-return NextResponse.json({ error: "Failed to update contact" }, { status: 500 });
-
-}
-
+  } catch (e) {
+    return NextResponse.json({ error: "Failed to update contact" }, { status: 500 });
+  }
 }

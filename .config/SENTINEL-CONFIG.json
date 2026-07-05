@@ -1,0 +1,63 @@
+{
+  "metadata": {
+    "name": "SENTINEL Canonical Roadmap Config",
+    "version": "1.0.0",
+    "owner": "DEbuehi7",
+    "created": "2026-07-03",
+    "lastUpdated": "2026-07-03",
+    "status": "Stress-tested, ready to execute",
+    "persistence": "Immutable; stored in repo for session recovery"
+  },
+  "three_tracks": {
+    "aura8": "Consumer platform (high-margin digital)",
+    "brrrr": "Real estate wealth (tax-sheltered)",
+    "aimature": "Creator SaaS (B2B, exponential margin)"
+  },
+  "flywheel_milestones": {
+    "month_1": "Aura8 v0 live → CCBill approval",
+    "month_3": "Aura8 Phase 1 → 100 subscribers → $1k MRR",
+    "month_4": "AIMature Phase 1 launch",
+    "month_6": "BRRRR Phase 1 → First property acquired",
+    "month_9": "$5k Aura8 MRR + $3k AIMature MRR = $8k total",
+    "month_12": "$10k Aura8 MRR + $1k AIMature MRR + $8k BRRRR NOI = $19k/mo",
+    "month_24": "$20k Aura8 MRR + $20k AIMature MRR + $50k BRRRR NOI = $90k/mo"
+  },
+  "capital_allocation": {
+    "operating_reserves": 0.30,
+    "brrrr_down_payment": 0.40,
+    "rd_aura8_aimature": 0.20,
+    "marketing_aimature": 0.10
+  },
+  "aura8_phases": {
+    "0": { "duration": "4 weeks", "gate": "CCBill approval", "revenue": "$0" },
+    "1": { "duration": "8-12 weeks", "gate": "$1.5k MRR", "revenue": "$1-1.5k MRR" },
+    "2": { "duration": "3 months", "gate": "$1.5k MRR proven", "revenue": "$5-10k MRR" }
+  },
+  "brrrr_phases": {
+    "0": { "duration": "12-18 months", "gate": "Credit ~700+, savings", "focus": "Credit repair + down payment" },
+    "1": { "duration": "6-12 months", "gate": "$1.5k MRR + credit", "strategy": "Fourplex + ADU", "target_noi": "$8k/mo" },
+    "2": { "duration": "12-24 months", "gate": "First property stabilized", "strategy": "2-3 properties", "target_noi": "$50k/mo" }
+  },
+  "aimature_phases": {
+    "0": { "duration": "2-3 weeks", "gate": "Market validation", "focus": "Product spec" },
+    "1": { "duration": "8-12 weeks", "gate": "20 creators", "revenue": "$980/mo" },
+    "2": { "duration": "4 months", "gate": "100 creators", "revenue": "$5k MRR" }
+  },
+  "what_dies": [
+    "Web3/NFT adult art (oversupplied 37% YoY)",
+    "In-house payment gateway (licensed financial-services)",
+    "Offshore/Monero treasury (FBAR/FinCEN exposure)",
+    "Deepfake studio SaaS (DEFIANCE Act risk)",
+    "Metaverse development (VR adoption plateaued)",
+    "$400M Year 5 projection (unrealistic without data)",
+    "Education/course platform (Tier 3, independent execution)"
+  ],
+  "next_immediate_actions": [
+    "Fix Aura8 email verification (add SENDGRID_API_KEY to Vercel)",
+    "Prepare CCBill submission package for Sinisha",
+    "Install GitHub Copilot IDE (VS Code)",
+    "Get CCBill merchant approval",
+    "Confirm $0 Phase 0 infrastructure cost",
+    "Begin AIMature product spec"
+  ]
+}

@@ -1,7 +1,7 @@
 'use client';
 export const dynamic = 'force-dynamic';
-import { useEffect, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { useEffect, useMemo, useState } from 'react';
+import { createBrowserSupabaseClient } from '@/lib/supabase/browser-safe';
 
 type Grant = {
 id: number;
@@ -39,20 +39,19 @@ return Math.ceil(diff / (1000 * 60 * 60 * 24));
 const STATUSES = ['IDENTIFIED', 'PENDING', 'SUBMITTED', 'APPROVED', 'REJECTED'];
 
 export default function GrantsPage() {
-const supabase = createClient(
-process.env.NEXT_PUBLIC_SUPABASE_URL!,
-process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+const supabase = useMemo(() => createBrowserSupabaseClient(), []);
 const [grants, setGrants] = useState<Grant[]>([]);
 const [loading, setLoading] = useState(true);
 const [filter, setFilter] = useState('ALL');
 
 useEffect(() => {
+if (!supabase) return;
 supabase.from('has_grants').select('*').order('deadline', { ascending: true })
 .then(({ data }) => { setGrants(data || []); setLoading(false); });
-}, []);
+}, [supabase]);
 
 async function updateStatus(id: number, status: string) {
+if (!supabase) return;
 await supabase.from('has_grants').update({ status }).eq('id', id);
 setGrants(prev => prev.map(g => g.id === id ? { ...g, status } : g));
 }
