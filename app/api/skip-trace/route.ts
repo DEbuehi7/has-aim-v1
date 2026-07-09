@@ -1,24 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-function getSupabaseClient() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error(
-      'Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY'
-    );
-  }
-
-  return createClient(supabaseUrl, supabaseAnonKey);
-}
-
 export async function POST(request: NextRequest) {
   try {
     const { propertyId, address, city, state, zip } = await request.json();
 
-    // Check if BatchData API is configured
+    if (!address) {
+      return NextResponse.json(
+        { success: false, error: 'Missing address' },
+        { status: 400 }
+      );
+    }
+
     if (!process.env.BATCHDATA_API_TOKEN) {
       return NextResponse.json(
         { success: false, error: 'Skip-trace service not configured' },
@@ -26,7 +19,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Call BatchData API directly
     const batchRes = await fetch('https://api.batchdata.com/api/v3/property/skip-trace', {
       method: 'POST',
       headers: {
@@ -38,9 +30,9 @@ export async function POST(request: NextRequest) {
           {
             propertyAddress: {
               street: address,
-              city,
-              state,
-              zip,
+              city: city || 'Los Angeles',
+              state: state || 'CA',
+              zip: zip || '',
             },
           },
         ],
@@ -49,36 +41,53 @@ export async function POST(request: NextRequest) {
 
     if (!batchRes.ok) {
       return NextResponse.json(
-        { success: false, error: 'Skip-trace API error' },
-        { status: 500 }
+        { success: false, error: 'Skip-trace request failed' },
+        { status: batchRes.status }
       );
     }
 
     const batchData = await batchRes.json();
+    const rawContacts =
+      batchData?.results?.[0]?.contacts ||
+      batchData?.results?.[0]?.skipTraces ||
+      [];
 
-    // Parse response
-    let contactData = {
-      ownerName: 'Unknown',
-      phone: '',
-      email: '',
-      tcpaCompliant: true,
-      dncCompliant: true,
+    const contacts = Array.isArray(rawContacts) ? rawContacts : [];
+    const bestContact =
+      contacts.find((contact: any) => !contact?.tcpa && !contact?.dnc) ||
+      contacts[0] ||
+      null;
+
+    const phone =
+      bestContact?.phone ||
+      bestContact?.phone_number ||
+      bestContact?.phones?.[0]?.number ||
+      '';
+
+    const email =
+      bestContact?.email ||
+      bestContact?.emails?.[0]?.email ||
+      bestContact?.emails?.[0] ||
+      '';
+
+    const contactData = {
+      ownerName: bestContact?.name || batchData?.results?.[0]?.ownerName || 'Unknown',
+      phone,
+      email,
+      tcpaCompliant: bestContact ? !bestContact.tcpa : true,
+      dncCompliant: bestContact ? !bestContact.dnc : true,
     };
 
-    if (batchData.results?.[0]) {
-      const result = batchData.results[0];
-      contactData = {
-        ownerName: result.ownerName || 'Unknown',
-        phone: result.phone || '',
-        email: result.email || '',
-        tcpaCompliant: !result.tcpa,
-        dncCompliant: !result.dnc,
-      };
-    }
-
-    // Update property if we have data
-    if (propertyId && contactData.phone) {
-      const supabase = getSupabaseClient();
+    if (
+      propertyId &&
+      contactData.phone &&
+      process.env.NEXT_PUBLIC_SUPABASE_URL &&
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    ) {
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+      );
 
       await supabase
         .from('has_properties')
@@ -88,14 +97,13 @@ export async function POST(request: NextRequest) {
         })
         .eq('id', propertyId);
 
-      // Log to compliance
       await supabase.from('has_compliance_log').insert({
         content_id: String(propertyId),
         content_type: 'skip_trace',
         human_reviewed: true,
         review_date: new Date().toISOString(),
         approved: true,
-        reviewer: 'BatchData API · TCPA compliant',
+        reviewer: 'BatchData · TCPA compliant',
         notes: `Skip trace: ${contactData.ownerName} · ${contactData.phone} · TCPA: ${contactData.tcpaCompliant} · DNC: ${contactData.dncCompliant}`,
       });
     }
