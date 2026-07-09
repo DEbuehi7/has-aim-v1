@@ -1,90 +1,86 @@
--- Supabase migration: Create compliance tables and RLS policies
--- Purpose: Enable static login for CCBill/Visa/Mastercard compliance audits
--- Run this migration in your Supabase SQL editor before deploying the application
+-- Static compliance login schema + RLS policies
+-- Run this in Supabase SQL editor.
 
--- Create compliance_accounts table
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 CREATE TABLE IF NOT EXISTS public.compliance_accounts (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  created_at timestamptz DEFAULT now(),
-  email text UNIQUE NOT NULL,
-  username text UNIQUE NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  email text NOT NULL UNIQUE,
+  username text NOT NULL UNIQUE,
   password_hash text NOT NULL,
-  account_type text NOT NULL DEFAULT 'compliance_auditor', -- 'compliance_auditor', 'internal_admin', etc.
-  role text NOT NULL DEFAULT 'read_only_auditor', -- 'read_only_auditor', 'admin', etc.
-  organization text, -- 'CCBill', 'Visa', 'Mastercard'
-  permissions jsonb DEFAULT '[]'::jsonb, -- array of permitted actions
-  restrictions jsonb DEFAULT '[]'::jsonb, -- array of prohibited actions
-  active boolean DEFAULT true,
+  account_type text NOT NULL DEFAULT 'compliance_auditor',
+  role text NOT NULL DEFAULT 'read_only_auditor',
+  organization text NOT NULL,
+  permissions jsonb NOT NULL DEFAULT '[]'::jsonb,
+  restrictions jsonb NOT NULL DEFAULT '[]'::jsonb,
+  active boolean NOT NULL DEFAULT true,
   last_login_at timestamptz,
   last_login_ip text,
-  expires_at timestamptz, -- null = permanent access
+  expires_at timestamptz,
   notes text
 );
 
--- Create compliance_audit_log table
 CREATE TABLE IF NOT EXISTS public.compliance_audit_log (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  created_at timestamptz DEFAULT now(),
-  compliance_account_id uuid REFERENCES public.compliance_accounts(id) ON DELETE CASCADE,
-  action text NOT NULL, -- 'login', 'view_content', 'view_subscribers', 'view_payments', 'view_audit_trail'
-  resource_type text, -- 'content', 'subscriber', 'payment', 'verification', 'dashboard'
+  created_at timestamptz NOT NULL DEFAULT now(),
+  compliance_account_id uuid REFERENCES public.compliance_accounts(id),
+  action text NOT NULL,
+  resource_type text,
   resource_id uuid,
   ip_address text,
   user_agent text,
-  details jsonb
+  details jsonb NOT NULL DEFAULT '{}'::jsonb
 );
 
--- Create indexes for performance
-CREATE INDEX idx_compliance_accounts_username ON public.compliance_accounts(username);
-CREATE INDEX idx_compliance_accounts_active ON public.compliance_accounts(active);
-CREATE INDEX idx_compliance_audit_log_account ON public.compliance_audit_log(compliance_account_id);
-CREATE INDEX idx_compliance_audit_log_created_at ON public.compliance_audit_log(created_at DESC);
-CREATE INDEX idx_compliance_audit_log_action ON public.compliance_audit_log(action);
+CREATE INDEX IF NOT EXISTS idx_compliance_audit_log_account
+  ON public.compliance_audit_log(compliance_account_id);
 
--- Enable RLS on compliance tables
-ALTER TABLE public.compliance_accounts ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.compliance_audit_log ENABLE ROW LEVEL SECURITY;
+CREATE INDEX IF NOT EXISTS idx_compliance_audit_log_created_at
+  ON public.compliance_audit_log(created_at DESC);
 
--- RLS Policy: Only service role can access compliance tables directly
-CREATE POLICY "Service role only" ON public.compliance_accounts
-  FOR ALL USING (auth.role() = 'service_role')
-  WITH CHECK (auth.role() = 'service_role');
-
-CREATE POLICY "Service role only" ON public.compliance_audit_log
-  FOR ALL USING (auth.role() = 'service_role')
-  WITH CHECK (auth.role() = 'service_role');
-
--- Enable RLS on data tables for compliance read-only access
 ALTER TABLE public.aura8_subscribers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.ccbill_webhook_events ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.yoti_verifications ENABLE ROW LEVEL SECURITY;
 
--- RLS Policies: Allow authenticated compliance access (read-only)
--- Note: These are permissive policies that allow reading when appropriate
-CREATE POLICY "Compliance read-only access" ON public.aura8_subscribers
-  FOR SELECT USING (true); -- Read-only, controlled by API endpoint
+DROP POLICY IF EXISTS compliance_read_only_aura8_subscribers ON public.aura8_subscribers;
+CREATE POLICY compliance_read_only_aura8_subscribers
+  ON public.aura8_subscribers
+  FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1
+      FROM public.compliance_accounts ca
+      WHERE ca.id = auth.uid()
+        AND ca.active = true
+        AND (ca.expires_at IS NULL OR ca.expires_at > now())
+    )
+  );
 
-CREATE POLICY "Compliance read-only access" ON public.ccbill_webhook_events
-  FOR SELECT USING (true); -- Read-only, controlled by API endpoint
+DROP POLICY IF EXISTS compliance_read_only_ccbill_webhook_events ON public.ccbill_webhook_events;
+CREATE POLICY compliance_read_only_ccbill_webhook_events
+  ON public.ccbill_webhook_events
+  FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1
+      FROM public.compliance_accounts ca
+      WHERE ca.id = auth.uid()
+        AND ca.active = true
+        AND (ca.expires_at IS NULL OR ca.expires_at > now())
+    )
+  );
 
-CREATE POLICY "Compliance read-only access" ON public.yoti_verifications
-  FOR SELECT USING (true); -- Read-only, controlled by API endpoint
-
--- Restrict write operations
-CREATE POLICY "No writes" ON public.aura8_subscribers
-  FOR UPDATE USING (false) WITH CHECK (false);
-
-CREATE POLICY "No writes" ON public.ccbill_webhook_events
-  FOR UPDATE USING (false) WITH CHECK (false);
-
-CREATE POLICY "No writes" ON public.yoti_verifications
-  FOR UPDATE USING (false) WITH CHECK (false);
-
-CREATE POLICY "No deletes" ON public.aura8_subscribers
-  FOR DELETE USING (false);
-
-CREATE POLICY "No deletes" ON public.ccbill_webhook_events
-  FOR DELETE USING (false);
-
-CREATE POLICY "No deletes" ON public.yoti_verifications
-  FOR DELETE USING (false);
+DROP POLICY IF EXISTS compliance_read_only_yoti_verifications ON public.yoti_verifications;
+CREATE POLICY compliance_read_only_yoti_verifications
+  ON public.yoti_verifications
+  FOR SELECT
+  USING (
+    EXISTS (
+      SELECT 1
+      FROM public.compliance_accounts ca
+      WHERE ca.id = auth.uid()
+        AND ca.active = true
+        AND (ca.expires_at IS NULL OR ca.expires_at > now())
+    )
+  );
